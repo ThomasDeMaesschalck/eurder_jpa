@@ -86,4 +86,37 @@ class UserServiceTest {
         assertDoesNotThrow(() -> userService.getAllUsers(admin.getId()));
     }
 
+    @Test
+    @DisplayName("User type creation system can make admin user")
+    void whenAdminNeedsToBeCreated_AdminIsMade() {
+       UserDTO admin =  userService.decideWhichTypeOfUserToCreate(userDTO, true);
+
+       User.Role expected = User.Role.ADMIN;
+
+       assertEquals(expected, admin.getRole());
+    }
+
+    @Test
+    @DisplayName("User type creation system can make regular user")
+    void whenUserNeedsToBeCreated_RegisteredUserIsMade() {
+        UserDTO user =  userService.decideWhichTypeOfUserToCreate(userDTO, false);
+
+        User.Role expected = User.Role.REGISTERED;
+
+        assertEquals(expected, user.getRole());
+    }
+
+
+    @Test
+    @DisplayName("Get by ID works")
+    void whenGettingUserById_CorrectUserIsReturned() {
+        UserDTO admin =  userService.decideWhichTypeOfUserToCreate(userDTO, true);
+        UserDTO user =  userService.decideWhichTypeOfUserToCreate(userDTO, false);
+
+        String expectedLastName = "lastname";
+
+        UserDTO result = userService.getById(admin.getId(), user.getId());
+
+        assertEquals(expectedLastName, result.getLastName());
+    }
 }

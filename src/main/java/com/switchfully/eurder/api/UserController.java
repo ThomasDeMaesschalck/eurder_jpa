@@ -27,20 +27,21 @@ public class UserController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO createUser(@RequestParam(value = "makeAdmin", required = false) boolean makeAdmin, @RequestBody CreateUserDTO createUserDTO) {
-        if (makeAdmin) {
-            logger.info("Creating new admin for email: " + createUserDTO.getEmail());
-            return userService.saveAdmin(createUserDTO);
-        } else {
-            logger.info("Creating new user for email: " + createUserDTO.getEmail());
-            return userService.saveUser(createUserDTO);
-        }
+        return userService.decideWhichTypeOfUserToCreate(createUserDTO, makeAdmin);
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<UserDTO> getAllUsers(@RequestHeader("adminId") UUID adminId) {
-        logger.info("User with id " + adminId + " getting all users");
+        logger.info("Admin with id " + adminId + " getting all users");
         return userService.getAllUsers(adminId);
+    }
+
+    @GetMapping(path="{userId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public UserDTO getUserById(@RequestHeader("adminId") UUID adminId, @PathVariable UUID userId) {
+        logger.info("Admin with id " + adminId + " getting user with id " + userId);
+        return userService.getById(adminId, userId);
     }
 
 }
