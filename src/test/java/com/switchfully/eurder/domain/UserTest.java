@@ -1,5 +1,6 @@
 package com.switchfully.eurder.domain;
 
+import com.switchfully.eurder.domain.entities.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

@@ -1,6 +1,6 @@
 package com.switchfully.eurder.repositories;
 
-import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.domain.entities.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -13,8 +13,9 @@ public class UserRepository {
     public UserRepository() {
     }
 
-    public void save(User user) {
+    public User save(User user) {
         users.put(user.getId(), user);
+        return users.get(user.getId());
     }
 
     public List<User> getUsers() {

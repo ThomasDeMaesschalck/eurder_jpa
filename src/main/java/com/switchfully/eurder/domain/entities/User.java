@@ -1,4 +1,4 @@
-package com.switchfully.eurder.domain;
+package com.switchfully.eurder.domain.entities;
 
 import org.apache.commons.validator.routines.EmailValidator;
 

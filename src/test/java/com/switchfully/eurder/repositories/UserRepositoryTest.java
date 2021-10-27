@@ -1,6 +1,6 @@
 package com.switchfully.eurder.repositories;
 
-import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.domain.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,31 +1,19 @@
 package com.switchfully.eurder.api.dto;
 
-import com.switchfully.eurder.domain.entities.User;
+public class CreateUserDTO {
 
-import java.util.UUID;
-
-public class UserDTO {
-
-    private final UUID id;
     private final String firstName;
     private final String lastName;
     private final String email;
     private final String address;
     private final String phoneNumber;
-    private final User.Role role;
 
-    public UserDTO(UUID id, String firstName, String lastName, String email, String address, String phoneNumber, User.Role role) {
-        this.id = id;
+    public CreateUserDTO(String firstName, String lastName, String email, String address, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.address = address;
         this.phoneNumber = phoneNumber;
-        this.role = role;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public String getFirstName() {
@@ -46,9 +34,5 @@ public class UserDTO {
 
     public String getPhoneNumber() {
         return phoneNumber;
-    }
-
-    public User.Role getRole() {
-        return role;
     }
 }
