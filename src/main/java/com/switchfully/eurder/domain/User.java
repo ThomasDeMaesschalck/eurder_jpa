@@ -15,7 +15,15 @@ public class User {
     private String phoneNumber;
     private Role role;
 
-    public User(String firstName, String lastName, String email, String address, String phoneNumber, Role role) {
+    public static User createUser(String firstName, String lastName, String email, String address, String phoneNumber) {
+        return new User(firstName, lastName, email, address, phoneNumber, Role.REGISTERED);
+    }
+
+    public static User createAdmin(String firstName, String lastName, String email, String address, String phoneNumber) {
+        return new User(firstName, lastName, email, address, phoneNumber, Role.ADMIN);
+    }
+
+    private User(String firstName, String lastName, String email, String address, String phoneNumber, Role role) {
         this.id = UUID.randomUUID();
         setFirstName(firstName);
         setLastName(lastName);
@@ -23,10 +31,6 @@ public class User {
         setAddress(address);
         setPhoneNumber(phoneNumber);
         setRole(role);
-    }
-
-    public User(String firstName, String lastName, String email, String address, String phoneNumber) {
-        this(firstName, lastName, email, address, phoneNumber, Role.REGISTERED);
     }
 
     public void setFirstName(String firstName) {
