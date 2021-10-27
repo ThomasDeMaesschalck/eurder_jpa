@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -17,6 +18,7 @@ public class UserService {
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
+    private boolean adminExists;
 
     @Autowired
     public UserService(UserMapper userMapper, UserRepository userRepository) {
@@ -29,12 +31,30 @@ public class UserService {
         return userMapper.toDTO(created);
     }
 
-    public List<UserDTO> getAllUsers() {
+    public UserDTO saveAdmin(CreateUserDTO adminToCreate) {
+        if(adminExists)
+        {
+            throw new IllegalArgumentException("There can be only one admin");
+        }
+        User created = userRepository.save(userMapper.toAdminEntity(adminToCreate));
+        adminExists = true;
+        return userMapper.toDTO(created);
+    }
+
+    public List<UserDTO> getAllUsers(UUID adminId) {
+        assertAdminId(adminId);
+
         return userRepository.getUsers().stream()
                 .sorted(Comparator.comparing(User::getLastName).thenComparing(User::getFirstName))
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
-
-
     }
+
+    public void assertAdminId(UUID adminId) {
+        User user = userRepository.getById(adminId);
+        if (user.getRole() != User.Role.ADMIN) {
+            throw new IllegalArgumentException("Unauthorized user");
+        }
+    }
+
 }

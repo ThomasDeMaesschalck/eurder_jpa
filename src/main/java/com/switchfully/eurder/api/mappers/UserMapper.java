@@ -22,4 +22,8 @@ public class UserMapper {
     public User toEntity(CreateUserDTO userDTO) {
         return User.createUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getAddress(), userDTO.getPhoneNumber());
     }
+
+    public User toAdminEntity(CreateUserDTO userDTO) {
+        return User.createAdmin(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getAddress(), userDTO.getPhoneNumber());
+    }
 }

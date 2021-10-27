@@ -14,13 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
 
     private CreateUserDTO userDTO;
-    private CreateUserDTO userDTO2;
     private UserService userService;
 
     @BeforeEach
     void setUp() {
         userDTO = new CreateUserDTO( "firstname", "lastname", "email@email.com", "address", "123456");
-        userDTO2 = new CreateUserDTO( "firstname2", "lastname2", "email2@email.com", "address2", "222222");
 
         userService = new UserService(new UserMapper(), new UserRepository());
     }
@@ -29,10 +27,10 @@ class UserServiceTest {
     @DisplayName("Saving a user results in user saved in repo")
     void whenSavingTwoUsers_sizeOfRepoIsTwo() {
         userService.saveUser(userDTO);
-        userService.saveUser(userDTO2);
+        UserDTO admin = userService.saveAdmin(userDTO);
 
         int expected = 2;
-        int result = userService.getAllUsers().size();
+        int result = userService.getAllUsers(admin.getId()).size();
 
         assertEquals(expected, result);
     }
@@ -41,8 +39,9 @@ class UserServiceTest {
     @DisplayName("Saving user details are correct")
     void whenSavingUserAndRetrieved_thenFieldsAreCorrect() {
         userService.saveUser(userDTO);
+        UserDTO admin = userService.saveAdmin(userDTO);
 
-        UserDTO result = userService.getAllUsers().get(0);
+        UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
 
         assertNotNull(result.getId());
         assertEquals(userDTO.getFirstName(), result.getFirstName());
@@ -51,6 +50,40 @@ class UserServiceTest {
         assertEquals(userDTO.getEmail(), result.getEmail());
         assertEquals(userDTO.getPhoneNumber(), result.getPhoneNumber());
         assertEquals(User.Role.REGISTERED, result.getRole());
+    }
+
+    @Test
+    @DisplayName("Admin creation role verification")
+    void whenSavingAdmin_thenRoleIsAdmin() {
+        UserDTO admin = userService.saveAdmin(userDTO);
+
+        UserDTO result = userService.getAllUsers(admin.getId()).get(0);
+
+        assertNotNull(result.getId());
+        assertEquals(userDTO.getFirstName(), result.getFirstName());
+        assertEquals(userDTO.getLastName(), result.getLastName());
+        assertEquals(userDTO.getAddress(), result.getAddress());
+        assertEquals(userDTO.getEmail(), result.getEmail());
+        assertEquals(userDTO.getPhoneNumber(), result.getPhoneNumber());
+        assertEquals(User.Role.ADMIN, result.getRole());
+    }
+
+    @Test
+    @DisplayName("Registered user can't retrieve users list")
+    void whenRegisteredUserCallsGetAllUsers_thenExceptionThrown() {
+        userService.saveUser(userDTO);
+        UserDTO admin = userService.saveAdmin(userDTO);
+        UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
+
+        assertThrows(IllegalArgumentException.class, () -> userService.getAllUsers(result.getId()));
+    }
+
+    @Test
+    @DisplayName("Admin can view users list")
+    void whenAdminUserCallsGetAllUsers_theListIsReturned() {
+        UserDTO admin = userService.saveAdmin(userDTO);
+
+        assertDoesNotThrow(() -> userService.getAllUsers(admin.getId()));
     }
 
 }
