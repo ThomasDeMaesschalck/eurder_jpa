@@ -8,7 +8,7 @@ import java.util.*;
 @Repository
 public class UserRepository {
 
-    private final HashMap<UUID, User> users = new HashMap<>();
+    private final Map<UUID, User> users = new HashMap<>();
 
     public UserRepository() {
     }

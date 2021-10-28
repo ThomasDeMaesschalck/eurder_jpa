@@ -1,4 +1,4 @@
-package com.switchfully.eurder.domain;
+package com.switchfully.eurder.domain.entities;
 
 import com.switchfully.eurder.domain.entities.User;
 import org.junit.jupiter.api.DisplayName;
