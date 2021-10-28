@@ -48,12 +48,16 @@ public class ItemService {
         return itemMapper.toDTO(itemRepository.getItems());
     }
 
+    public Item getById(UUID itemId){
+        return itemRepository.getById(itemId);
+    }
+
 
     public void assertItemId(UUID itemId) {
         try {
             itemRepository.getById(itemId);
         } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Can't update: " + exception.getMessage());
+            throw new IllegalArgumentException("Not possible: " + exception.getMessage());
         }
     }
 

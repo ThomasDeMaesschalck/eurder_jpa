@@ -5,8 +5,6 @@ import com.switchfully.eurder.api.dto.UserDTO;
 import com.switchfully.eurder.api.mappers.UserMapper;
 import com.switchfully.eurder.domain.entities.User;
 import com.switchfully.eurder.repositories.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +59,14 @@ public class UserService {
         User user = userRepository.getById(adminId);
         if (user.getRole() != User.Role.ADMIN) {
             throw new IllegalArgumentException("Unauthorized user");
+        }
+    }
+
+    public void assertUserId(UUID userId) {
+        try {
+            userRepository.getById(userId);
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException(exception.getMessage());
         }
     }
 

@@ -1,6 +1,5 @@
 package com.switchfully.eurder.api;
 
-import com.switchfully.eurder.api.dto.CreateItemDTO;
 import com.switchfully.eurder.api.dto.CreateOrderDTO;
 import com.switchfully.eurder.api.dto.ItemDTO;
 import com.switchfully.eurder.services.OrderService;
