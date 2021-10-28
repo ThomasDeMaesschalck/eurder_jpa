@@ -5,8 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ItemTest {
 
@@ -94,6 +93,19 @@ class ItemTest {
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(-5)
                         .build());
+    }
+
+    @Test
+    @DisplayName("When creating a valid Item it gets a unique ID")
+    void whenValidItemMade_thenItHasUUID() {
+        Item myitem = Item.ItemBuilder.item()
+                .withName("Box")
+                .withDescription("A fancy box")
+                .withPrice(BigDecimal.valueOf(500))
+                .withAmountInStock(5)
+                .build();
+
+        assertFalse(myitem.getId().toString().isBlank());
     }
 
 }

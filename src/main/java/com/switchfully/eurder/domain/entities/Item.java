@@ -1,6 +1,7 @@
 package com.switchfully.eurder.domain.entities;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
 public class Item {
@@ -39,21 +40,21 @@ public class Item {
         return amountInStock;
     }
 
-    protected static class ItemBuilder {
+    public static class ItemBuilder {
         private String name;
         private String description;
         private BigDecimal price;
         private int amountInStock;
 
-        protected static ItemBuilder item() {
+        public static ItemBuilder item() {
             return new Item.ItemBuilder();
         }
 
-        protected Item build() {
+        public Item build() {
             return new Item(name, description, price, amountInStock);
         }
 
-        protected Item.ItemBuilder withName(String name) {
+        public Item.ItemBuilder withName(String name) {
             if (name == null || name.isBlank()) {
                 throw new IllegalArgumentException("Item name is required");
             }
@@ -61,7 +62,7 @@ public class Item {
             return this;
         }
 
-        protected Item.ItemBuilder withDescription(String description) {
+        public Item.ItemBuilder withDescription(String description) {
             if (description == null || description.isBlank()) {
                 throw new IllegalArgumentException("Item description is required");
             }
@@ -69,7 +70,7 @@ public class Item {
             return this;
         }
 
-        protected Item.ItemBuilder withPrice(BigDecimal price) {
+        public Item.ItemBuilder withPrice(BigDecimal price) {
             if (price == null || price.compareTo(BigDecimal.ZERO) <= 0) {
                 throw new IllegalArgumentException("Item price required and must be greater than 0");
             }
@@ -77,12 +78,25 @@ public class Item {
             return this;
         }
 
-        protected Item.ItemBuilder withAmountInStock(int amountInStock) {
+        public Item.ItemBuilder withAmountInStock(int amountInStock) {
             if (amountInStock < 0) {
                 throw new IllegalArgumentException("Amount in stock can't be negative");
             }
             this.amountInStock = amountInStock;
             return this;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Item item = (Item) o;
+        return Objects.equals(id, item.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
