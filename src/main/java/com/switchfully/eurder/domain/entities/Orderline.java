@@ -1,0 +1,66 @@
+package com.switchfully.eurder.domain.entities;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.Objects;
+import java.util.UUID;
+
+public class Orderline {
+
+    private final UUID itemId;
+    private final String name;
+    private final String description;
+    private final BigDecimal price;
+    private final int amount;
+    private final LocalDate shippingDate;
+
+    public Orderline(UUID itemId, String name, String description, BigDecimal price, int amount, LocalDate shippingDate) {
+        this.itemId = itemId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.amount = amount;
+        this.shippingDate = shippingDate;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Orderline orderline = (Orderline) o;
+        return Objects.equals(itemId, orderline.itemId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemId);
+    }
+
+    public UUID getItemId() {
+        return itemId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public LocalDate getShippingDate() {
+        return shippingDate;
+    }
+
+    public BigDecimal getOrderlineTotal(){
+        return price.multiply(BigDecimal.valueOf(amount));
+    }
+}
