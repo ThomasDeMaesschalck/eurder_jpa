@@ -1,7 +1,6 @@
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.entities.Item;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
