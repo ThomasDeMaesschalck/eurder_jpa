@@ -19,7 +19,7 @@ public class ItemRepository {
     }
 
     public List<Item> getItems() {
-        return Collections.unmodifiableList(new ArrayList<>(items.values()));
+        return List.copyOf(items.values());
     }
 
     public Item getById(UUID itemId) {

@@ -33,10 +33,27 @@ public class ItemService {
         return itemMapper.toDTO(created);
     }
 
+    public ItemDTO update(UUID adminId, ItemDTO updateItemDTO) {
+        userService.assertAdminId(adminId);
+        assertItemId(updateItemDTO.getId());
+
+        Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO));
+        return itemMapper.toDTO(update);
+    }
+
     public List<ItemDTO> getAllItems(UUID adminId) {
         userService.assertAdminId(adminId);
 
         return itemMapper.toDTO(itemRepository.getItems());
+    }
+
+
+    public void assertItemId(UUID itemId) {
+        try {
+            itemRepository.getById(itemId);
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Can't update: " + exception.getMessage());
+        }
     }
 
 }

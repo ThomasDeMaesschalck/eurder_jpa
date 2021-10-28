@@ -8,14 +8,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ItemMapperTest {
 
     private Item item;
-    private ItemDTO itemDTO;
     private CreateItemDTO createItemDTO;
+    private ItemDTO updateItemDTO;
     private ItemMapper itemMapper;
 
     @BeforeEach
@@ -25,17 +26,17 @@ class ItemMapperTest {
                 .withDescription("Test description")
                 .withPrice(BigDecimal.valueOf(5))
                 .withAmountInStock(5)
-                .build();
+                .buildNewItem();
 
-        itemDTO = ItemDTO.ItemBuilder.item()
+        createItemDTO = new CreateItemDTO("Test Item", "Test description", BigDecimal.valueOf(5), 5);
+
+        updateItemDTO = ItemDTO.ItemDTOBuilder.item()
+                .withId(UUID.randomUUID())
                 .withName("Test Item")
                 .withDescription("Test description")
                 .withPrice(BigDecimal.valueOf(5))
                 .withAmountInStock(5)
                 .build();
-
-        createItemDTO = new CreateItemDTO("Test Item", "TestDescription", BigDecimal.valueOf(5), 5);
-
 
         itemMapper = new ItemMapper();
     }
@@ -53,14 +54,26 @@ class ItemMapperTest {
     }
 
     @Test
-    @DisplayName("When converted to entity all fields are correct")
-    void toEntity() {
+    @DisplayName("When converting CreateItemDTO to entity all fields are correct")
+    void toEntityForCreateMethod() {
         Item result = itemMapper.toEntity(createItemDTO);
 
         assertEquals(createItemDTO.getName(), result.getName());
         assertEquals(createItemDTO.getDescription(), result.getDescription());
         assertEquals(createItemDTO.getPrice(), result.getPrice());
         assertEquals(createItemDTO.getAmountInStock(), result.getAmountInStock());
+    }
+
+    @Test
+    @DisplayName("When converting ItemDTO to entity all fields are correct")
+    void toEntityForUpdateMethod() {
+        Item result = itemMapper.toEntity(updateItemDTO);
+
+        assertEquals(updateItemDTO.getId(), result.getId());
+        assertEquals(updateItemDTO.getName(), result.getName());
+        assertEquals(updateItemDTO.getDescription(), result.getDescription());
+        assertEquals(updateItemDTO.getPrice(), result.getPrice());
+        assertEquals(updateItemDTO.getAmountInStock(), result.getAmountInStock());
     }
 
 

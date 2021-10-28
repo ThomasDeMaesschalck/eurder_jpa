@@ -18,7 +18,7 @@ class ItemTest {
                 .withDescription("A fancy box")
                 .withPrice(BigDecimal.valueOf(500))
                 .withAmountInStock(5)
-                .build()
+                .buildNewItem()
         );
     }
 
@@ -32,7 +32,7 @@ class ItemTest {
                         .withDescription("A fancy box")
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
 
         assertThrows(IllegalArgumentException.class, () ->
                 Item.ItemBuilder.item()
@@ -40,7 +40,7 @@ class ItemTest {
                         .withDescription("A fancy box")
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
     }
 
     @Test
@@ -52,7 +52,7 @@ class ItemTest {
                         .withDescription(null)
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
 
         assertThrows(IllegalArgumentException.class, () ->
                 Item.ItemBuilder.item()
@@ -60,7 +60,7 @@ class ItemTest {
                         .withDescription("")
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
     }
 
     @Test
@@ -72,7 +72,7 @@ class ItemTest {
                         .withDescription("kljlkjlk")
                         .withPrice(null)
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
 
         assertThrows(IllegalArgumentException.class, () ->
                 Item.ItemBuilder.item()
@@ -80,7 +80,7 @@ class ItemTest {
                         .withDescription("kljkljlk")
                         .withPrice(BigDecimal.valueOf(-5))
                         .withAmountInStock(5)
-                        .build());
+                        .buildNewItem());
     }
 
     @Test
@@ -92,7 +92,7 @@ class ItemTest {
                         .withDescription("")
                         .withPrice(BigDecimal.valueOf(500))
                         .withAmountInStock(-5)
-                        .build());
+                        .buildNewItem());
     }
 
     @Test
@@ -103,7 +103,7 @@ class ItemTest {
                 .withDescription("A fancy box")
                 .withPrice(BigDecimal.valueOf(500))
                 .withAmountInStock(5)
-                .build();
+                .buildNewItem();
 
         assertFalse(myitem.getId().toString().isBlank());
     }

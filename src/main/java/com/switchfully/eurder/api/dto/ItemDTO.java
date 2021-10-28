@@ -1,7 +1,5 @@
 package com.switchfully.eurder.api.dto;
 
-import com.switchfully.eurder.domain.entities.Item;
-
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -41,42 +39,42 @@ public class ItemDTO {
         return amountInStock;
     }
 
-    public static class ItemBuilder {
+    public static class ItemDTOBuilder {
         private UUID id;
         private String name;
         private String description;
         private BigDecimal price;
         private int amountInStock;
 
-        public static ItemDTO.ItemBuilder item() {
-            return new ItemDTO.ItemBuilder();
+        public static ItemDTOBuilder item() {
+            return new ItemDTOBuilder();
         }
 
         public ItemDTO build() {
             return new ItemDTO(id, name, description, price, amountInStock);
         }
 
-        public ItemDTO.ItemBuilder withId(UUID id) {
+        public ItemDTOBuilder withId(UUID id) {
             this.id = id;
             return this;
         }
 
-        public ItemDTO.ItemBuilder withName(String name) {
+        public ItemDTOBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public ItemDTO.ItemBuilder withDescription(String description) {
+        public ItemDTOBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public ItemDTO.ItemBuilder withPrice(BigDecimal price) {
+        public ItemDTOBuilder withPrice(BigDecimal price) {
             this.price = price;
             return this;
         }
 
-        public ItemDTO.ItemBuilder withAmountInStock(int amountInStock) {
+        public ItemDTOBuilder withAmountInStock(int amountInStock) {
             this.amountInStock = amountInStock;
             return this;
         }

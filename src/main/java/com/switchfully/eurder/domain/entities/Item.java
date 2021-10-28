@@ -12,8 +12,12 @@ public class Item {
     private final BigDecimal price;
     private final int amountInStock;
 
-    private Item(String name, String description, BigDecimal price, int amountInStock) {
-        this.id = UUID.randomUUID();
+    private Item(UUID id, String name, String description, BigDecimal price, int amountInStock) {
+        if (id == null) {
+            this.id = UUID.randomUUID();
+        } else {
+            this.id = id;
+        }
         this.name = name;
         this.description = description;
         this.price = price;
@@ -41,6 +45,7 @@ public class Item {
     }
 
     public static class ItemBuilder {
+        private UUID id;
         private String name;
         private String description;
         private BigDecimal price;
@@ -50,8 +55,20 @@ public class Item {
             return new Item.ItemBuilder();
         }
 
-        public Item build() {
-            return new Item(name, description, price, amountInStock);
+        public Item buildNewItem() {
+            return new Item(null, name, description, price, amountInStock);
+        }
+
+        public Item buildUpdatedNewItem() {
+            return new Item(id, name, description, price, amountInStock);
+        }
+
+        public Item.ItemBuilder withId(UUID id) {
+            if (id == null) {
+                throw new IllegalArgumentException("Item id is required");
+            }
+            this.id = id;
+            return this;
         }
 
         public Item.ItemBuilder withName(String name) {

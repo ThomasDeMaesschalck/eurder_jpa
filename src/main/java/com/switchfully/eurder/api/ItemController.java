@@ -38,4 +38,12 @@ public class ItemController {
         logger.info("Admin with id " + adminId + " is making new item " + createItemDTO.getName());
         return itemService.save(adminId, createItemDTO);
     }
+
+    @PutMapping(consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ItemDTO updateItem(@RequestHeader(value = "adminId") UUID adminId,
+                              @RequestBody ItemDTO itemDTO) {
+        logger.info("Admin with id " + adminId + " is updating item with id " + itemDTO.getId());
+        return itemService.update(adminId, itemDTO);
+    }
 }

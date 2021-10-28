@@ -19,7 +19,7 @@ public class UserRepository {
     }
 
     public List<User> getUsers() {
-        return Collections.unmodifiableList(new ArrayList<>(users.values()));
+        return List.copyOf(users.values());
     }
 
     public User getById(UUID userId) {

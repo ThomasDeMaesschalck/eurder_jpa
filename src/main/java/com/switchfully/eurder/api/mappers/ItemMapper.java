@@ -13,7 +13,7 @@ public class ItemMapper {
 
 
     public ItemDTO toDTO(Item item) {
-        return ItemDTO.ItemBuilder.item()
+        return ItemDTO.ItemDTOBuilder.item()
                 .withId(item.getId())
                 .withName(item.getName())
                 .withDescription(item.getDescription())
@@ -32,7 +32,17 @@ public class ItemMapper {
                 .withDescription(createItemDTO.getDescription())
                 .withPrice(createItemDTO.getPrice())
                 .withAmountInStock(createItemDTO.getAmountInStock())
-                .build();
+                .buildNewItem();
+    }
+
+    public Item toEntity(ItemDTO updateItemDTO) {
+        return Item.ItemBuilder.item()
+                .withId(updateItemDTO.getId())
+                .withName(updateItemDTO.getName())
+                .withDescription(updateItemDTO.getDescription())
+                .withPrice(updateItemDTO.getPrice())
+                .withAmountInStock(updateItemDTO.getAmountInStock())
+                .buildUpdatedNewItem();
     }
 
 

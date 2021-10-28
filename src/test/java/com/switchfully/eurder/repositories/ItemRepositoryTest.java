@@ -30,14 +30,14 @@ class ItemRepositoryTest {
                 .withDescription(description)
                 .withPrice(price)
                 .withAmountInStock(amountInStock)
-                .build();
+                .buildNewItem();
 
         item2 = Item.ItemBuilder.item()
                 .withName(name2)
                 .withDescription(description)
                 .withPrice(price)
                 .withAmountInStock(amountInStock)
-                .build();
+                .buildNewItem();
     }
 
     @DisplayName("When saving items they are added to the repository ")
