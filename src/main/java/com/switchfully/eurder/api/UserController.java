@@ -26,9 +26,9 @@ public class UserController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestParam(value = "makeAdmin", required = false) boolean makeAdmin,
-                              @RequestBody CreateUserDTO createUserDTO) {
-        return userService.decideWhichTypeOfUserToCreate(createUserDTO, makeAdmin);
+    public UserDTO createUser(@RequestBody CreateUserDTO createUserDTO) {
+        logger.info("Creating new user for email: " + createUserDTO.getEmail());
+        return userService.createUser(createUserDTO);
     }
 
     @GetMapping(produces = "application/json")

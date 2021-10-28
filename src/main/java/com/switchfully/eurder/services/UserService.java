@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final Logger logger = LoggerFactory.getLogger(UserService.class);
-
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private boolean adminExists;
@@ -30,22 +28,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserDTO decideWhichTypeOfUserToCreate(CreateUserDTO userDTO, boolean makeAdmin) {
-        if (makeAdmin) {
-            logger.info("Creating new admin for email: " + userDTO.getEmail());
-            return saveAdmin(userDTO);
-        } else {
-            logger.info("Creating new user for email: " + userDTO.getEmail());
-            return saveUser(userDTO);
-        }
-    }
-
-    public UserDTO saveUser(CreateUserDTO userDTO) {
+    public UserDTO createUser(CreateUserDTO userDTO) {
         User created = userRepository.save(userMapper.toEntity(userDTO));
         return userMapper.toDTO(created);
     }
 
-    public UserDTO saveAdmin(CreateUserDTO adminToCreate) {
+    public UserDTO createAdmin(CreateUserDTO adminToCreate) {
         if (adminExists) {
             throw new IllegalArgumentException("There can be only one admin");
         }

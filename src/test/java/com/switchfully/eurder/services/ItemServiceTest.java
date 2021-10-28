@@ -39,8 +39,8 @@ class ItemServiceTest {
         CreateUserDTO adminDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
         CreateUserDTO userDTO = new CreateUserDTO("firstnameUser", "lastname", "email@email.com", "address", "123456");
 
-        admin = userService.saveAdmin(adminDTO);
-        user = userService.saveUser(userDTO);
+        admin = userService.createAdmin(adminDTO);
+        user = userService.createUser(userDTO);
     }
 
     @Test

@@ -18,7 +18,7 @@ class UserServiceTest {
 
     @BeforeEach
     void setUp() {
-        userDTO = new CreateUserDTO( "firstname", "lastname", "email@email.com", "address", "123456");
+        userDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
 
         userService = new UserService(new UserMapper(), new UserRepository());
     }
@@ -26,8 +26,8 @@ class UserServiceTest {
     @Test
     @DisplayName("Saving a user results in user saved in repo")
     void whenSavingTwoUsers_sizeOfRepoIsTwo() {
-        userService.saveUser(userDTO);
-        UserDTO admin = userService.saveAdmin(userDTO);
+        userService.createUser(userDTO);
+        UserDTO admin = userService.createAdmin(userDTO);
 
         int expected = 2;
         int result = userService.getAllUsers(admin.getId()).size();
@@ -38,8 +38,8 @@ class UserServiceTest {
     @Test
     @DisplayName("Saving user details are correct")
     void whenSavingUserAndRetrieved_thenFieldsAreCorrect() {
-        userService.saveUser(userDTO);
-        UserDTO admin = userService.saveAdmin(userDTO);
+        userService.createUser(userDTO);
+        UserDTO admin = userService.createAdmin(userDTO);
 
         UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
 
@@ -55,7 +55,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Admin creation role verification")
     void whenSavingAdmin_thenRoleIsAdmin() {
-        UserDTO admin = userService.saveAdmin(userDTO);
+        UserDTO admin = userService.createAdmin(userDTO);
 
         UserDTO result = userService.getAllUsers(admin.getId()).get(0);
 
@@ -71,8 +71,8 @@ class UserServiceTest {
     @Test
     @DisplayName("Registered user can't retrieve users list")
     void whenRegisteredUserCallsGetAllUsers_thenExceptionThrown() {
-        userService.saveUser(userDTO);
-        UserDTO admin = userService.saveAdmin(userDTO);
+        userService.createUser(userDTO);
+        UserDTO admin = userService.createAdmin(userDTO);
         UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
 
         assertThrows(IllegalArgumentException.class, () -> userService.getAllUsers(result.getId()));
@@ -81,7 +81,7 @@ class UserServiceTest {
     @Test
     @DisplayName("Admin can view users list")
     void whenAdminUserCallsGetAllUsers_theListIsReturned() {
-        UserDTO admin = userService.saveAdmin(userDTO);
+        UserDTO admin = userService.createAdmin(userDTO);
 
         assertDoesNotThrow(() -> userService.getAllUsers(admin.getId()));
     }
@@ -89,17 +89,17 @@ class UserServiceTest {
     @Test
     @DisplayName("User type creation system can make admin user")
     void whenAdminNeedsToBeCreated_AdminIsMade() {
-       UserDTO admin =  userService.decideWhichTypeOfUserToCreate(userDTO, true);
+        UserDTO admin = userService.createAdmin(userDTO);
 
-       User.Role expected = User.Role.ADMIN;
+        User.Role expected = User.Role.ADMIN;
 
-       assertEquals(expected, admin.getRole());
+        assertEquals(expected, admin.getRole());
     }
 
     @Test
     @DisplayName("User type creation system can make regular user")
     void whenUserNeedsToBeCreated_RegisteredUserIsMade() {
-        UserDTO user =  userService.decideWhichTypeOfUserToCreate(userDTO, false);
+        UserDTO user = userService.createUser(userDTO);
 
         User.Role expected = User.Role.REGISTERED;
 
@@ -110,8 +110,8 @@ class UserServiceTest {
     @Test
     @DisplayName("Get by ID works")
     void whenGettingUserById_CorrectUserIsReturned() {
-        UserDTO admin =  userService.decideWhichTypeOfUserToCreate(userDTO, true);
-        UserDTO user =  userService.decideWhichTypeOfUserToCreate(userDTO, false);
+        UserDTO admin = userService.createAdmin(userDTO);
+        UserDTO user = userService.createUser(userDTO);
 
         String expectedLastName = "lastname";
 
