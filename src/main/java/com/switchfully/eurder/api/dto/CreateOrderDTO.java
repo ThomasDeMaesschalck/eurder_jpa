@@ -1,21 +1,19 @@
 package com.switchfully.eurder.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class CreateOrderDTO {
 
-    private final UUID customerId;
-    private final List<CreateOrderlineDTO> orderlines;
+    private final List<CreateOrderlineDTO> orderlines = new ArrayList<>();
 
-    public CreateOrderDTO(UUID customerId, List<CreateOrderlineDTO> orderlines) {
-        this.customerId = customerId;
-        this.orderlines = orderlines;
+    @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
+    public CreateOrderDTO(List<CreateOrderlineDTO> orderlines) {
+        this.orderlines.addAll(orderlines);
     }
 
-    public UUID getCustomerId() {
-        return customerId;
-    }
 
     public List<CreateOrderlineDTO> getOrderlines() {
         return orderlines;
