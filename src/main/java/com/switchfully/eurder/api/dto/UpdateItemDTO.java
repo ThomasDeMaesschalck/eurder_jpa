@@ -2,13 +2,13 @@ package com.switchfully.eurder.api.dto;
 
 import java.math.BigDecimal;
 
-public class CreateItemDTO {
+public class UpdateItemDTO {
     private final String name;
     private final String description;
     private final BigDecimal price;
     private final int amountInStock;
 
-    private CreateItemDTO(String name, String description, BigDecimal price, int amountInStock) {
+    private UpdateItemDTO(String name, String description, BigDecimal price, int amountInStock) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -31,37 +31,37 @@ public class CreateItemDTO {
         return amountInStock;
     }
 
-    public static class CreateItemDTOBuilder {
+    public static class UpdateItemDTOBuilder {
         private String name;
         private String description;
         private BigDecimal price;
         private int amountInStock;
 
-        public static CreateItemDTO.CreateItemDTOBuilder item() {
-            return new CreateItemDTO.CreateItemDTOBuilder();
+        public static UpdateItemDTO.UpdateItemDTOBuilder item() {
+            return new UpdateItemDTO.UpdateItemDTOBuilder();
         }
 
-        public CreateItemDTO build() {
-            return new CreateItemDTO(name, description, price, amountInStock);
+        public UpdateItemDTO build() {
+            return new UpdateItemDTO(name, description, price, amountInStock);
         }
 
 
-        public CreateItemDTO.CreateItemDTOBuilder withName(String name) {
+        public UpdateItemDTO.UpdateItemDTOBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withDescription(String description) {
+        public UpdateItemDTO.UpdateItemDTOBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withPrice(BigDecimal price) {
+        public UpdateItemDTO.UpdateItemDTOBuilder withPrice(BigDecimal price) {
             this.price = price;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withAmountInStock(int amountInStock) {
+        public UpdateItemDTO.UpdateItemDTOBuilder withAmountInStock(int amountInStock) {
             this.amountInStock = amountInStock;
             return this;
         }

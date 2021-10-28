@@ -2,6 +2,7 @@ package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.CreateItemDTO;
 import com.switchfully.eurder.api.dto.ItemDTO;
+import com.switchfully.eurder.api.dto.UpdateItemDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
 import com.switchfully.eurder.domain.entities.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
@@ -33,11 +34,11 @@ public class ItemService {
         return itemMapper.toDTO(created);
     }
 
-    public ItemDTO update(UUID adminId, ItemDTO updateItemDTO) {
+    public ItemDTO update(UUID adminId, UpdateItemDTO updateItemDTO, UUID itemId) {
         userService.assertAdminId(adminId);
-        assertItemId(updateItemDTO.getId());
+        assertItemId(itemId);
 
-        Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO));
+        Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO,itemId ));
         return itemMapper.toDTO(update);
     }
 

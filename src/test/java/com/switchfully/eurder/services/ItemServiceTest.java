@@ -2,7 +2,7 @@ package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.CreateItemDTO;
 import com.switchfully.eurder.api.dto.CreateUserDTO;
-import com.switchfully.eurder.api.dto.ItemDTO;
+import com.switchfully.eurder.api.dto.UpdateItemDTO;
 import com.switchfully.eurder.api.dto.UserDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
 import com.switchfully.eurder.api.mappers.UserMapper;
@@ -26,7 +26,12 @@ class ItemServiceTest {
 
     @BeforeEach
     void setUp() {
-        createItemDTO = new CreateItemDTO("My Item", "Fancy item", BigDecimal.valueOf(500), 5);
+        createItemDTO = new CreateItemDTO.CreateItemDTOBuilder()
+                .withName("My Item")
+                .withDescription("Fancy item")
+                .withPrice(BigDecimal.valueOf(500))
+                .withAmountInStock(5)
+                .build();
 
         UserService userService = new UserService(new UserMapper(), new UserRepository());
         itemService = new ItemService(new ItemMapper(), userService, new ItemRepository());
@@ -70,15 +75,14 @@ class ItemServiceTest {
         UUID itemUUID = itemService.getAllItems(admin.getId()).get(0).getId();
         String newName = "new name";
 
-        ItemDTO updateItemDTO = new ItemDTO.ItemDTOBuilder()
-                .withId(itemUUID)
+        UpdateItemDTO updateItemDTO = new UpdateItemDTO.UpdateItemDTOBuilder()
                 .withDescription(createItemDTO.getDescription())
                 .withName(newName)
                 .withAmountInStock(createItemDTO.getAmountInStock())
                 .withPrice(createItemDTO.getPrice())
                 .build();
 
-        itemService.update(admin.getId(), updateItemDTO);
+        itemService.update(admin.getId(), updateItemDTO, itemUUID);
 
         int expected = 1;
         int result = itemService.getAllItems(admin.getId()).size();
@@ -94,15 +98,14 @@ class ItemServiceTest {
         UUID itemUUID = itemService.getAllItems(admin.getId()).get(0).getId();
         String newName = "new name";
 
-        ItemDTO updateItemDTO = new ItemDTO.ItemDTOBuilder()
-                .withId(itemUUID)
+        UpdateItemDTO updateItemDTO = new UpdateItemDTO.UpdateItemDTOBuilder()
                 .withDescription(createItemDTO.getDescription())
                 .withName(newName)
                 .withAmountInStock(createItemDTO.getAmountInStock())
                 .withPrice(createItemDTO.getPrice())
                 .build();
 
-        itemService.update(admin.getId(), updateItemDTO);
+        itemService.update(admin.getId(), updateItemDTO, itemUUID);
 
         String result = itemService.getAllItems(admin.getId()).get(0).getName();
 

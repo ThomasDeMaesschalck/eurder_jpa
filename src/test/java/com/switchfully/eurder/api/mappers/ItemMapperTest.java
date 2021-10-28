@@ -2,6 +2,7 @@ package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dto.CreateItemDTO;
 import com.switchfully.eurder.api.dto.ItemDTO;
+import com.switchfully.eurder.api.dto.UpdateItemDTO;
 import com.switchfully.eurder.domain.entities.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +17,9 @@ class ItemMapperTest {
 
     private Item item;
     private CreateItemDTO createItemDTO;
-    private ItemDTO updateItemDTO;
+    private UpdateItemDTO updateItemDTO;
     private ItemMapper itemMapper;
+    private UUID randomUUID;
 
     @BeforeEach
     void setUp() {
@@ -28,11 +30,17 @@ class ItemMapperTest {
                 .withAmountInStock(5)
                 .buildNewItem();
 
-        createItemDTO = new CreateItemDTO("Test Item", "Test description", BigDecimal.valueOf(5), 5);
+        createItemDTO = CreateItemDTO.CreateItemDTOBuilder.item()
+                .withName("Test Create Item")
+                .withDescription("Test description")
+                .withPrice(BigDecimal.valueOf(5))
+                .withAmountInStock(5)
+                .build();
 
-        updateItemDTO = ItemDTO.ItemDTOBuilder.item()
-                .withId(UUID.randomUUID())
-                .withName("Test Item")
+        randomUUID = UUID.randomUUID();
+
+        updateItemDTO = UpdateItemDTO.UpdateItemDTOBuilder.item()
+                .withName("Test Update Item")
                 .withDescription("Test description")
                 .withPrice(BigDecimal.valueOf(5))
                 .withAmountInStock(5)
@@ -67,9 +75,9 @@ class ItemMapperTest {
     @Test
     @DisplayName("When converting ItemDTO to entity all fields are correct")
     void toEntityForUpdateMethod() {
-        Item result = itemMapper.toEntity(updateItemDTO);
+        Item result = itemMapper.toEntity(updateItemDTO, randomUUID);
 
-        assertEquals(updateItemDTO.getId(), result.getId());
+        assertEquals(randomUUID, result.getId());
         assertEquals(updateItemDTO.getName(), result.getName());
         assertEquals(updateItemDTO.getDescription(), result.getDescription());
         assertEquals(updateItemDTO.getPrice(), result.getPrice());

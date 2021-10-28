@@ -2,6 +2,7 @@ package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.api.dto.CreateItemDTO;
 import com.switchfully.eurder.api.dto.ItemDTO;
+import com.switchfully.eurder.api.dto.UpdateItemDTO;
 import com.switchfully.eurder.services.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +40,11 @@ public class ItemController {
         return itemService.save(adminId, createItemDTO);
     }
 
-    @PutMapping(consumes = "application/json", produces = "application/json")
+    @PutMapping(path = "{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem(@RequestHeader(value = "adminId") UUID adminId,
-                              @RequestBody ItemDTO itemDTO) {
-        logger.info("Admin with id " + adminId + " is updating item with id " + itemDTO.getId());
-        return itemService.update(adminId, itemDTO);
+    public ItemDTO updateItem(@RequestHeader(value = "adminId") UUID adminId, @PathVariable UUID itemId,
+                              @RequestBody UpdateItemDTO itemDTO) {
+        logger.info("Admin with id " + adminId + " is updating item with id " + itemId);
+        return itemService.update(adminId, itemDTO, itemId);
     }
 }
