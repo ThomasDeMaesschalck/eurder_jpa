@@ -10,15 +10,15 @@ public class Orderline {
     private final UUID itemId;
     private final String name;
     private final String description;
-    private final BigDecimal price;
+    private final BigDecimal salePrice;
     private final int amount;
     private final LocalDate shippingDate;
 
-    public Orderline(UUID itemId, String name, String description, BigDecimal price, int amount, LocalDate shippingDate) {
+    public Orderline(UUID itemId, String name, String description, BigDecimal salePrice, int amount, LocalDate shippingDate) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
-        this.price = price;
+        this.salePrice = salePrice;
         this.amount = amount;
         this.shippingDate = shippingDate;
     }
@@ -48,8 +48,8 @@ public class Orderline {
         return description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getSalePrice() {
+        return salePrice;
     }
 
     public int getAmount() {
@@ -61,6 +61,6 @@ public class Orderline {
     }
 
     public BigDecimal getOrderlineTotal(){
-        return price.multiply(BigDecimal.valueOf(amount));
+        return salePrice.multiply(BigDecimal.valueOf(amount));
     }
 }

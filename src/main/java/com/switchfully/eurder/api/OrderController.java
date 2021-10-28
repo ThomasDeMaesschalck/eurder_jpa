@@ -2,6 +2,7 @@ package com.switchfully.eurder.api;
 
 import com.switchfully.eurder.api.dto.CreateOrderDTO;
 import com.switchfully.eurder.api.dto.ItemDTO;
+import com.switchfully.eurder.api.dto.OrderDTO;
 import com.switchfully.eurder.services.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +27,8 @@ public class OrderController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDTO createItem(@RequestHeader(value = "userId") UUID userId,
-                              @RequestBody CreateOrderDTO createOrderDTO) {
+    public OrderDTO createItem(@RequestHeader(value = "userId") UUID userId,
+                               @RequestBody CreateOrderDTO createOrderDTO) {
         logger.info("User with id " + userId + " is making an order");
         return orderService.save(userId, createOrderDTO);
     }

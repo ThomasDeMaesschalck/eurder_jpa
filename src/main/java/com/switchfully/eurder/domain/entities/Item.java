@@ -10,7 +10,7 @@ public class Item {
     private final String name;
     private final String description;
     private final BigDecimal price;
-    private final int amountInStock;
+    private int amountInStock;
 
     private Item(UUID id, String name, String description, BigDecimal price, int amountInStock) {
         if (id == null) {
@@ -42,6 +42,14 @@ public class Item {
 
     public int getAmountInStock() {
         return amountInStock;
+    }
+
+    public void takeItemsFromStock(int amountOrdered) {
+        if (amountOrdered > this.amountInStock) {
+            this.amountInStock = 0;
+        } else {
+            this.amountInStock = this.amountInStock - amountOrdered;
+        }
     }
 
     public static class ItemBuilder {

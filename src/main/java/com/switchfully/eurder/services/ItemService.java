@@ -52,7 +52,6 @@ public class ItemService {
         return itemRepository.getById(itemId);
     }
 
-
     public void assertItemId(UUID itemId) {
         try {
             itemRepository.getById(itemId);
