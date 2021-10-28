@@ -2,6 +2,7 @@ package com.switchfully.eurder.domain.entities;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -27,4 +28,28 @@ public class Order {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getCustomerId() {
+        return customerId;
+    }
+
+    public Set<Orderline> getOrderlines() {
+        return orderlines;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return Objects.equals(id, order.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
