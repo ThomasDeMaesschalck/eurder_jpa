@@ -41,6 +41,7 @@ class OrderServiceTest {
     private OrderRepository orderRepository;
     private CreateOrderlineDTO createOrderlineDTO1;
     private CreateOrderlineDTO createOrderlineDTO2;
+    private ItemRepository itemRepository;
 
     @BeforeEach
     void setUp() {
@@ -49,7 +50,7 @@ class OrderServiceTest {
         UserRepository userRepository = new UserRepository();
         UserService userService = new UserService(new UserMapper(), userRepository);
         orderRepository = new OrderRepository();
-        ItemRepository itemRepository = new ItemRepository();
+        itemRepository = new ItemRepository();
 
         ItemService itemService = new ItemService(new ItemMapper(), userService, itemRepository);
         orderService = new OrderService(new OrderMapper(), new OrderlineMapper(), userService, itemService, orderRepository);
@@ -197,9 +198,9 @@ class OrderServiceTest {
     @Test
     @DisplayName("When valid order made with orderline not fully in stock the orderline ships in 7 days")
     void whenMakingValidOrder_thenOrderlineShipsInSevenDaysWhenItemIsNotFullyInStock() {
-        CreateOrderlineDTO withSufficientStock = new CreateOrderlineDTO(item2UUID, 1000);
+        CreateOrderlineDTO withInsufficientStock = new CreateOrderlineDTO(item2UUID, 1000);
 
-        createOrderDTO = new CreateOrderDTO(List.of(withSufficientStock));
+        createOrderDTO = new CreateOrderDTO(List.of(withInsufficientStock));
 
         OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
 
@@ -211,6 +212,21 @@ class OrderServiceTest {
         if (orderlineDTO.isPresent()) {
             result = orderlineDTO.get().getShippingDate();
         }
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("When valid order made with the stock in Item repo is adjusted correctly")
+    void whenMakingValidOrder_thenItemStockIsLowered() {
+        CreateOrderlineDTO withSufficientStock = new CreateOrderlineDTO(item2UUID, 9);
+
+        createOrderDTO = new CreateOrderDTO(List.of(withSufficientStock));
+
+        orderService.save(user.getId(), createOrderDTO);
+
+        int expected = 1;
+        int result = itemRepository.getById(item2UUID).getAmountInStock();
 
         assertEquals(expected, result);
     }

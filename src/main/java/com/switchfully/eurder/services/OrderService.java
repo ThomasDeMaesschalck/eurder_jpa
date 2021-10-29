@@ -40,9 +40,8 @@ public class OrderService {
         userService.assertUserId(userId);
 
         Order order = processOrder(createOrderDTO, userId);
-        orderRepository.save(order);
 
-        return orderMapper.toDTO(order);
+        return orderMapper.toDTO(orderRepository.save(order));
     }
 
     private Order processOrder(CreateOrderDTO createOrderDTO, UUID userId) {
