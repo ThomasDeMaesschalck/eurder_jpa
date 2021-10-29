@@ -1,9 +1,11 @@
 package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
+import com.switchfully.eurder.api.dto.items.ItemDTO;
 import com.switchfully.eurder.api.dto.orders.CreateOrderDTO;
 import com.switchfully.eurder.api.dto.orders.CreateOrderlineDTO;
 import com.switchfully.eurder.api.dto.orders.OrderDTO;
+import com.switchfully.eurder.api.dto.orders.OrderlineDTO;
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
 import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -73,8 +76,12 @@ class OrderServiceTest {
         itemService.save(admin.getId(), createItemDTO);
         itemService.save(admin.getId(), createItemDTO2);
 
-        item1UUID = itemService.getAllItems(admin.getId()).stream().filter(item -> item.getName().equals("My Item")).findFirst().get().getId();
-        item2UUID = itemService.getAllItems(admin.getId()).stream().filter(item -> item.getName().equals("My Item2")).findFirst().get().getId();
+        Optional<ItemDTO> itemDTO1 = itemService.getAllItems(admin.getId()).stream().filter(item -> item.getName().equals("My Item")).findFirst();
+        Optional<ItemDTO> itemDTO2 = itemService.getAllItems(admin.getId()).stream().filter(item -> item.getName().equals("My Item2")).findFirst();
+
+        itemDTO1.ifPresent(itemDTO -> item1UUID = itemDTO.getId());
+
+        itemDTO2.ifPresent(itemDTO -> item2UUID = itemDTO.getId());
 
         createOrderlineDTO1 = new CreateOrderlineDTO(item1UUID, 5);
         createOrderlineDTO2 = new CreateOrderlineDTO(item2UUID, 10);
@@ -177,7 +184,12 @@ class OrderServiceTest {
         OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
 
         LocalDate expected = LocalDate.now().plusDays(1);
-        LocalDate result = orderDTO.getOrderlineDTOSet().stream().findFirst().get().getShippingDate();
+        Optional<OrderlineDTO> orderlineDTO = orderDTO.getOrderlineDTOSet().stream().findFirst();
+        LocalDate result = null;
+
+        if (orderlineDTO.isPresent()) {
+            result = orderlineDTO.get().getShippingDate();
+        }
 
         assertEquals(expected, result);
     }
@@ -192,7 +204,13 @@ class OrderServiceTest {
         OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
 
         LocalDate expected = LocalDate.now().plusDays(7);
-        LocalDate result = orderDTO.getOrderlineDTOSet().stream().findFirst().get().getShippingDate();
+
+        LocalDate result = null;
+        Optional<OrderlineDTO> orderlineDTO = orderDTO.getOrderlineDTOSet().stream().findFirst();
+
+        if (orderlineDTO.isPresent()) {
+            result = orderlineDTO.get().getShippingDate();
+        }
 
         assertEquals(expected, result);
     }
