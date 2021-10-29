@@ -47,17 +47,11 @@ public class OrderService {
 
     private Order processOrder(CreateOrderDTO createOrderDTO, UUID userId) {
 
-        createOrderDTO.getOrderlines().forEach(orderline -> {
-            itemService.assertItemId(orderline.getItemId());
-            assertOrderlineAmountGreaterThanZero(orderline.getAmount());
-        });
+        createOrderDTO.getOrderlines().forEach(this::assertOrderlineIdAndOrderedAmount);
 
         Order order = new Order(userId);
 
-        createOrderDTO.getOrderlines().forEach(orderline -> {
-            Orderline orderlineToAdd = processOrderline(orderline);
-            order.addOrderline(orderlineToAdd);
-        });
+        createOrderDTO.getOrderlines().forEach(orderline -> order.addOrderline(processOrderline(orderline)));
 
         return order;
     }
@@ -79,6 +73,11 @@ public class OrderService {
         } else {
             return LocalDate.now().plusDays(BACKORDERED_SHIPPING_DAYS);
         }
+    }
+
+    private void assertOrderlineIdAndOrderedAmount(CreateOrderlineDTO orderline) {
+        itemService.assertItemId(orderline.getItemId());
+        assertOrderlineAmountGreaterThanZero(orderline.getAmount());
     }
 
     private void assertOrderlineAmountGreaterThanZero(int amount) {
