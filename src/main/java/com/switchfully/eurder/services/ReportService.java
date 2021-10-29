@@ -27,10 +27,10 @@ public class ReportService {
     }
 
     public OrdersReportForCustomerDTO getReportOfOrdersForCustomer(UUID userId, UUID customerId) {
-        List<OrderReportDTO> listOfAllOrdersFromCustomer = new ArrayList<>();
-
         assertIdOfRetrieverIsSameAsCustomerIdOfOrders(userId, customerId);
         userService.assertUserId(customerId);
+
+        List<OrderReportDTO> listOfAllOrdersFromCustomer = new ArrayList<>();
 
         processorAllOrdersOfTheCustomer(getAllOrdersOfCustomer(customerId), listOfAllOrdersFromCustomer);
 
