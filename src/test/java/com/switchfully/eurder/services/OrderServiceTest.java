@@ -3,23 +3,27 @@ package com.switchfully.eurder.services;
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
 import com.switchfully.eurder.api.dto.orders.CreateOrderDTO;
 import com.switchfully.eurder.api.dto.orders.CreateOrderlineDTO;
-import com.switchfully.eurder.api.dto.orders.OrderlineDTO;
+import com.switchfully.eurder.api.dto.orders.OrderDTO;
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
 import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
 import com.switchfully.eurder.api.mappers.OrderMapper;
 import com.switchfully.eurder.api.mappers.OrderlineMapper;
 import com.switchfully.eurder.api.mappers.UserMapper;
+import com.switchfully.eurder.domain.entities.Orderline;
 import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,48 +31,37 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class OrderServiceTest {
 
     private CreateOrderDTO createOrderDTO;
-    private OrderlineDTO orderlineDTO;
-    private OrderlineDTO orderlineDTO2;
     private OrderService orderService;
-    private UserService userService;
-    private CreateUserDTO userDTO;
-    private CreateUserDTO adminDTO;
     private UserDTO user;
-    private UserDTO admin;
-    private CreateItemDTO createItemDTO;
-    private CreateItemDTO createItemDTO2;
-    private ItemService itemService;
     private UUID item1UUID;
     private UUID item2UUID;
     private OrderRepository orderRepository;
     private CreateOrderlineDTO createOrderlineDTO1;
     private CreateOrderlineDTO createOrderlineDTO2;
-    private UserRepository userRepository;
-    private ItemRepository itemRepository;
 
     @BeforeEach
     void setUp() {
-        userDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
-        adminDTO = new CreateUserDTO("admin", "lastname", "email@email.com", "address", "123456");
-        userRepository = new UserRepository();
-        userService = new UserService(new UserMapper(), userRepository);
+        CreateUserDTO userDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
+        CreateUserDTO adminDTO = new CreateUserDTO("admin", "lastname", "email@email.com", "address", "123456");
+        UserRepository userRepository = new UserRepository();
+        UserService userService = new UserService(new UserMapper(), userRepository);
         orderRepository = new OrderRepository();
-        itemRepository = new ItemRepository();
+        ItemRepository itemRepository = new ItemRepository();
 
-        itemService = new ItemService(new ItemMapper(), userService, itemRepository);
+        ItemService itemService = new ItemService(new ItemMapper(), userService, itemRepository);
         orderService = new OrderService(new OrderMapper(), new OrderlineMapper(), userService, itemService, orderRepository);
         userService = new UserService(new UserMapper(), userRepository);
-        admin = userService.createAdmin(adminDTO);
+        UserDTO admin = userService.createAdmin(adminDTO);
         user = userService.createUser(userDTO);
 
-        createItemDTO = new CreateItemDTO.CreateItemDTOBuilder()
+        CreateItemDTO createItemDTO = new CreateItemDTO.CreateItemDTOBuilder()
                 .withName("My Item")
                 .withDescription("Fancy item")
                 .withPrice(BigDecimal.valueOf(10))
                 .withAmountInStock(5)
                 .build();
 
-        createItemDTO2 = new CreateItemDTO.CreateItemDTOBuilder()
+        CreateItemDTO createItemDTO2 = new CreateItemDTO.CreateItemDTOBuilder()
                 .withName("My Item2")
                 .withDescription("Fancy item")
                 .withPrice(BigDecimal.valueOf(500))
@@ -137,13 +130,69 @@ class OrderServiceTest {
 
     @Test
     @DisplayName("When valid order made then user id is found in repo")
-    void whenMakingValidOrder_theOrderInRepoContainsItemUUIDs() {
+    void whenMakingValidOrder_theOrderInRepoContainsCustomerUUID() {
         createOrderDTO = new CreateOrderDTO(List.of(createOrderlineDTO1, createOrderlineDTO2));
 
         orderService.save(user.getId(), createOrderDTO);
 
         UUID expected = user.getId();
         UUID result = orderRepository.getOrders().get(0).getCustomerId();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("When valid order made then item UUIDs found in repo")
+    void whenMakingValidOrder_theOrderInRepoContainsItemUUIDs() {
+        createOrderDTO = new CreateOrderDTO(List.of(createOrderlineDTO1, createOrderlineDTO2));
+
+        orderService.save(user.getId(), createOrderDTO);
+
+        List<UUID> expected = List.of(item1UUID, item2UUID);
+        List<UUID> result = orderRepository.getOrders().get(0).getOrderlines().stream().map(Orderline::getItemId).collect(Collectors.toList());
+
+        Assertions.assertThat(expected).hasSameElementsAs(result);
+    }
+
+    @Test
+    @DisplayName("When valid order made order total is correct")
+    void whenMakingValidOrder_theOrderTotalIsCalculatedCorrectly() {
+        createOrderDTO = new CreateOrderDTO(List.of(createOrderlineDTO1, createOrderlineDTO2));
+
+        OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
+
+        BigDecimal expected = BigDecimal.valueOf(5050);
+        BigDecimal result = orderDTO.getTotalOrderPrice();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("When valid order made with orderline fully in stock the orderline ships tomorrow")
+    void whenMakingValidOrder_thenOrderlineShipsTomorrowWhenItemIsInStock() {
+        CreateOrderlineDTO withSufficientStock = new CreateOrderlineDTO(item2UUID, 1);
+
+        createOrderDTO = new CreateOrderDTO(List.of(withSufficientStock));
+
+        OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
+
+        LocalDate expected = LocalDate.now().plusDays(1);
+        LocalDate result = orderDTO.getOrderlineDTOSet().stream().findFirst().get().getShippingDate();
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    @DisplayName("When valid order made with orderline not fully in stock the orderline ships in 7 days")
+    void whenMakingValidOrder_thenOrderlineShipsInSevenDaysWhenItemIsNotFullyInStock() {
+        CreateOrderlineDTO withSufficientStock = new CreateOrderlineDTO(item2UUID, 1000);
+
+        createOrderDTO = new CreateOrderDTO(List.of(withSufficientStock));
+
+        OrderDTO orderDTO = orderService.save(user.getId(), createOrderDTO);
+
+        LocalDate expected = LocalDate.now().plusDays(7);
+        LocalDate result = orderDTO.getOrderlineDTOSet().stream().findFirst().get().getShippingDate();
 
         assertEquals(expected, result);
     }
