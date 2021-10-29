@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dto;
+package com.switchfully.eurder.api.dto.orders;
 
 import java.math.BigDecimal;
 import java.util.HashSet;

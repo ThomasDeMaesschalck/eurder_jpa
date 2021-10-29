@@ -1,7 +1,7 @@
 package com.switchfully.eurder.api.mappers;
 
-import com.switchfully.eurder.api.dto.OrderDTO;
-import com.switchfully.eurder.api.dto.OrderlineDTO;
+import com.switchfully.eurder.api.dto.orders.OrderDTO;
+import com.switchfully.eurder.api.dto.orders.OrderlineDTO;
 import com.switchfully.eurder.domain.entities.Order;
 import org.springframework.stereotype.Component;
 

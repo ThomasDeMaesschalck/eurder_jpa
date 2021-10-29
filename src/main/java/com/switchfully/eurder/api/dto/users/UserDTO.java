@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dto;
+package com.switchfully.eurder.api.dto.users;
 
 import com.switchfully.eurder.domain.entities.User;
 

@@ -1,7 +1,10 @@
 package com.switchfully.eurder.services;
 
-import com.switchfully.eurder.api.dto.*;
+import com.switchfully.eurder.api.dto.orders.CreateOrderDTO;
+import com.switchfully.eurder.api.dto.orders.CreateOrderlineDTO;
+import com.switchfully.eurder.api.dto.orders.OrderDTO;
 import com.switchfully.eurder.api.mappers.OrderMapper;
+import com.switchfully.eurder.api.mappers.OrderlineMapper;
 import com.switchfully.eurder.domain.entities.Item;
 import com.switchfully.eurder.domain.entities.Order;
 import com.switchfully.eurder.domain.entities.Orderline;
@@ -19,18 +22,19 @@ public class OrderService {
     private static final int BACKORDERED_SHIPPING_DAYS = 7;
 
     private final OrderMapper orderMapper;
+    private final OrderlineMapper orderlineMapper;
     private final UserService userService;
     private final ItemService itemService;
     private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderService(OrderMapper orderMapper, UserService userService, ItemService itemService, OrderRepository orderRepository) {
+    public OrderService(OrderMapper orderMapper, OrderlineMapper orderlineMapper, UserService userService, ItemService itemService, OrderRepository orderRepository) {
         this.orderMapper = orderMapper;
+        this.orderlineMapper = orderlineMapper;
         this.userService = userService;
         this.itemService = itemService;
         this.orderRepository = orderRepository;
     }
-
 
     public OrderDTO save(UUID userId, CreateOrderDTO createOrderDTO) {
         userService.assertUserId(userId);
@@ -64,7 +68,9 @@ public class OrderService {
 
         item.takeItemsFromStock(orderline.getAmount());
 
-        return new Orderline(item.getId(), item.getName(), item.getDescription(), item.getPrice(), orderline.getAmount(), calculateShippingDate(orderline.getAmount(), item.getAmountInStock()));
+        LocalDate shippingDate = calculateShippingDate(orderline.getAmount(), item.getAmountInStock());
+
+        return orderlineMapper.toEntity(item, orderline.getAmount(), shippingDate);
     }
 
     private LocalDate calculateShippingDate(int amountOrdered, int amountInStock) {

@@ -1,7 +1,7 @@
 package com.switchfully.eurder.api.mappers;
 
-import com.switchfully.eurder.api.dto.CreateUserDTO;
-import com.switchfully.eurder.api.dto.UserDTO;
+import com.switchfully.eurder.api.dto.users.CreateUserDTO;
+import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.domain.entities.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

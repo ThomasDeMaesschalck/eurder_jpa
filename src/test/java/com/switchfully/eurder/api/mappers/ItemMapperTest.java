@@ -1,8 +1,8 @@
 package com.switchfully.eurder.api.mappers;
 
-import com.switchfully.eurder.api.dto.CreateItemDTO;
-import com.switchfully.eurder.api.dto.ItemDTO;
-import com.switchfully.eurder.api.dto.UpdateItemDTO;
+import com.switchfully.eurder.api.dto.items.CreateItemDTO;
+import com.switchfully.eurder.api.dto.items.ItemDTO;
+import com.switchfully.eurder.api.dto.items.UpdateItemDTO;
 import com.switchfully.eurder.domain.entities.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

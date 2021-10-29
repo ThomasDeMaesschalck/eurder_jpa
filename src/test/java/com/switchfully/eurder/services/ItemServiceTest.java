@@ -1,9 +1,9 @@
 package com.switchfully.eurder.services;
 
-import com.switchfully.eurder.api.dto.CreateItemDTO;
-import com.switchfully.eurder.api.dto.CreateUserDTO;
-import com.switchfully.eurder.api.dto.UpdateItemDTO;
-import com.switchfully.eurder.api.dto.UserDTO;
+import com.switchfully.eurder.api.dto.items.CreateItemDTO;
+import com.switchfully.eurder.api.dto.users.CreateUserDTO;
+import com.switchfully.eurder.api.dto.items.UpdateItemDTO;
+import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
 import com.switchfully.eurder.api.mappers.UserMapper;
 import com.switchfully.eurder.repositories.ItemRepository;

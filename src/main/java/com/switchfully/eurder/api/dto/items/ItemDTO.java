@@ -1,18 +1,26 @@
-package com.switchfully.eurder.api.dto;
+package com.switchfully.eurder.api.dto.items;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
-public class CreateItemDTO {
+public class ItemDTO {
+
+    private final UUID id;
     private final String name;
     private final String description;
     private final BigDecimal price;
     private final int amountInStock;
 
-    private CreateItemDTO(String name, String description, BigDecimal price, int amountInStock) {
+    private ItemDTO(UUID id, String name, String description, BigDecimal price, int amountInStock) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.amountInStock = amountInStock;
+    }
+
+    public UUID getId() {
+        return id;
     }
 
     public String getName() {
@@ -31,37 +39,42 @@ public class CreateItemDTO {
         return amountInStock;
     }
 
-    public static class CreateItemDTOBuilder {
+    public static class ItemDTOBuilder {
+        private UUID id;
         private String name;
         private String description;
         private BigDecimal price;
         private int amountInStock;
 
-        public static CreateItemDTO.CreateItemDTOBuilder item() {
-            return new CreateItemDTO.CreateItemDTOBuilder();
+        public static ItemDTOBuilder item() {
+            return new ItemDTOBuilder();
         }
 
-        public CreateItemDTO build() {
-            return new CreateItemDTO(name, description, price, amountInStock);
+        public ItemDTO build() {
+            return new ItemDTO(id, name, description, price, amountInStock);
         }
 
+        public ItemDTOBuilder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
 
-        public CreateItemDTO.CreateItemDTOBuilder withName(String name) {
+        public ItemDTOBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withDescription(String description) {
+        public ItemDTOBuilder withDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withPrice(BigDecimal price) {
+        public ItemDTOBuilder withPrice(BigDecimal price) {
             this.price = price;
             return this;
         }
 
-        public CreateItemDTO.CreateItemDTOBuilder withAmountInStock(int amountInStock) {
+        public ItemDTOBuilder withAmountInStock(int amountInStock) {
             this.amountInStock = amountInStock;
             return this;
         }

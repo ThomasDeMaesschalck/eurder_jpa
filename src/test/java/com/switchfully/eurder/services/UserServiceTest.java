@@ -1,7 +1,7 @@
 package com.switchfully.eurder.services;
 
-import com.switchfully.eurder.api.dto.CreateUserDTO;
-import com.switchfully.eurder.api.dto.UserDTO;
+import com.switchfully.eurder.api.dto.users.CreateUserDTO;
+import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.api.mappers.UserMapper;
 import com.switchfully.eurder.domain.entities.User;
 import com.switchfully.eurder.repositories.UserRepository;

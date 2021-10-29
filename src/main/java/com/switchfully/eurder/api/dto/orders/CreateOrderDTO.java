@@ -1,4 +1,4 @@
-package com.switchfully.eurder.api.dto;
+package com.switchfully.eurder.api.dto.orders;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
