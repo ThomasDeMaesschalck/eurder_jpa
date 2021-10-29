@@ -48,7 +48,7 @@ public class OrderService {
 
         createOrderDTO.getOrderlines().forEach(this::assertOrderlineIdAndOrderedAmount);
 
-        Order order = new Order(userId);
+        Order order = orderMapper.toEntity(userId);
 
         createOrderDTO.getOrderlines().forEach(orderline -> order.addOrderline(processOrderline(orderline)));
 

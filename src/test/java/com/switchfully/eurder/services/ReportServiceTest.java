@@ -6,10 +6,7 @@ import com.switchfully.eurder.api.dto.orders.CreateOrderDTO;
 import com.switchfully.eurder.api.dto.orders.CreateOrderlineDTO;
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
 import com.switchfully.eurder.api.dto.users.UserDTO;
-import com.switchfully.eurder.api.mappers.ItemMapper;
-import com.switchfully.eurder.api.mappers.OrderMapper;
-import com.switchfully.eurder.api.mappers.OrderlineMapper;
-import com.switchfully.eurder.api.mappers.UserMapper;
+import com.switchfully.eurder.api.mappers.*;
 import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
@@ -78,7 +75,8 @@ class ReportServiceTest {
         createOrderlineDTO1 = new CreateOrderlineDTO(item1UUID, 5);
         createOrderlineDTO2 = new CreateOrderlineDTO(item2UUID, 10);
 
-        reportService = new ReportService(userService, orderRepository);
+        ReportMapper reportMapper = new ReportMapper();
+        reportService = new ReportService(userService, orderRepository, reportMapper);
     }
 
     @Test

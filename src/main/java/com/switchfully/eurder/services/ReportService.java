@@ -3,6 +3,7 @@ package com.switchfully.eurder.services;
 import com.switchfully.eurder.api.dto.reports.OrderReportDTO;
 import com.switchfully.eurder.api.dto.reports.OrderlineReportDTO;
 import com.switchfully.eurder.api.dto.reports.OrdersReportForCustomerDTO;
+import com.switchfully.eurder.api.mappers.ReportMapper;
 import com.switchfully.eurder.domain.entities.Order;
 import com.switchfully.eurder.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ public class ReportService {
 
     private final UserService userService;
     private final OrderRepository orderRepository;
+    private final ReportMapper reportMapper;
 
     @Autowired
-    public ReportService(UserService userService, OrderRepository orderRepository) {
+    public ReportService(UserService userService, OrderRepository orderRepository, ReportMapper reportMapper) {
         this.userService = userService;
         this.orderRepository = orderRepository;
+        this.reportMapper = reportMapper;
     }
 
     public OrdersReportForCustomerDTO getReportOfOrdersForCustomer(UUID userId, UUID customerId) {
@@ -34,7 +37,7 @@ public class ReportService {
 
         processorAllOrdersOfTheCustomer(getAllOrdersOfCustomer(customerId), listOfAllOrdersFromCustomer);
 
-        return new OrdersReportForCustomerDTO(listOfAllOrdersFromCustomer, calculateTotalOfAllCustomerOrders(listOfAllOrdersFromCustomer));
+        return reportMapper.toOrdersReportForCustomerDTO(listOfAllOrdersFromCustomer, calculateTotalOfAllCustomerOrders(listOfAllOrdersFromCustomer));
     }
 
     private List<Order> getAllOrdersOfCustomer(UUID customerId) {
@@ -48,12 +51,12 @@ public class ReportService {
     }
 
     private void processIndividualOrder(Order order, List<OrderReportDTO> listOfAllOrdersFromCustomer) {
-        listOfAllOrdersFromCustomer.add(new OrderReportDTO(order.getId(), processOrderlinesOfIndividualOrder(order)));
+        listOfAllOrdersFromCustomer.add(reportMapper.toOrderReportDTO(order.getId(), processOrderlinesOfIndividualOrder(order)));
     }
 
     private List<OrderlineReportDTO> processOrderlinesOfIndividualOrder(Order order) {
         return order.getOrderlines().stream()
-                .map(orderline -> new OrderlineReportDTO(orderline.getName(), orderline.getAmount(), orderline.getOrderlineTotal()))
+                .map(reportMapper::toOrderlineReportDTO)
                 .collect(Collectors.toList());
     }
 

@@ -5,6 +5,8 @@ import com.switchfully.eurder.api.dto.orders.OrderlineDTO;
 import com.switchfully.eurder.domain.entities.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 
 @Component
 public class OrderMapper {
@@ -18,6 +20,10 @@ public class OrderMapper {
                 .forEach(orderDTO::addOrderlineDTO);
 
         return orderDTO;
+    }
+
+    public Order toEntity(UUID customerId){
+        return new Order(customerId);
     }
 
 }
