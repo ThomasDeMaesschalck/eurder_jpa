@@ -8,12 +8,14 @@ import com.switchfully.eurder.api.mappers.OrderlineMapper;
 import com.switchfully.eurder.domain.entities.Item;
 import com.switchfully.eurder.domain.entities.Order;
 import com.switchfully.eurder.domain.entities.Orderline;
+import com.switchfully.eurder.domain.entities.User;
 import com.switchfully.eurder.repositories.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class OrderService {
@@ -46,16 +48,24 @@ public class OrderService {
 
     private Order processOrder(CreateOrderDTO createOrderDTO, Long userId) {
 
+        User user = userService.findById(userId);
+
         createOrderDTO.getOrderlines().forEach(this::assertOrderlineIdAndOrderedAmount);
 
-        Order order = orderMapper.toEntity(userId);
 
-        createOrderDTO.getOrderlines().forEach(orderline -> order.addOrderline(processOrderline(orderline)));
+        Order order = orderMapper.toEntity(user);
+
+        Set<Orderline> orderlines = new HashSet<>();
+
+        createOrderDTO.getOrderlines().forEach(
+                orderline -> orderlines.add(processOrderline(orderline, order)));
+
+        order.setOrderlines(orderlines);
 
         return order;
     }
 
-    private Orderline processOrderline(CreateOrderlineDTO orderline) {
+    private Orderline processOrderline(CreateOrderlineDTO orderline, Order order) {
 
         Item item = itemService.getById(orderline.getItemId());
 
@@ -63,7 +73,7 @@ public class OrderService {
 
         LocalDate shippingDate = calculateShippingDate(orderline.getAmount(), item.getAmountInStock());
 
-        return orderlineMapper.toEntity(item, orderline.getAmount(), shippingDate);
+        return orderlineMapper.toEntity(item, orderline.getAmount(), shippingDate, order);
     }
 
     private LocalDate calculateShippingDate(int amountOrdered, int amountInStock) {

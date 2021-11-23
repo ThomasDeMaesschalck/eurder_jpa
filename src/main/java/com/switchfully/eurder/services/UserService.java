@@ -55,6 +55,11 @@ public class UserService {
         return userMapper.toDTO(userRepository.findById(userId).get());
     }
 
+    public User findById(Long userId) {
+        assertUserId(userId);
+        return userRepository.findById(userId).get();
+    }
+
     public void assertAdminId(Long adminId) {
         Optional<User> user = userRepository.findById(adminId);
         if (user.isEmpty()) {

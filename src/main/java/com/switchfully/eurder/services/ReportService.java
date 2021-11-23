@@ -40,8 +40,8 @@ public class ReportService {
     }
 
     private List<Order> getAllOrdersOfCustomer(Long customerId) {
-        return orderRepository.getOrders().stream()
-                .filter(order -> order.getCustomerId().equals(customerId))
+        return orderRepository.findAll().stream()
+                .filter(order -> order.getCustomer().getId().equals(customerId))
                 .collect(Collectors.toList());
     }
 

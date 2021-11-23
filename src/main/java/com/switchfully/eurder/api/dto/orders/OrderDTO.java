@@ -7,19 +7,19 @@ import java.util.UUID;
 
 public class OrderDTO {
 
-    private final UUID id;
+    private final Long id;
     private final Long customerId;
     private final Set<OrderlineDTO> orderlineDTOSet;
     private final BigDecimal totalOrderPrice;
 
-    public OrderDTO(UUID id, Long customerId, BigDecimal totalOrderPrice) {
+    public OrderDTO(Long id, Long customerId, BigDecimal totalOrderPrice) {
         orderlineDTOSet = new HashSet<>();
         this.id = id;
         this.customerId = customerId;
         this.totalOrderPrice = totalOrderPrice;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 

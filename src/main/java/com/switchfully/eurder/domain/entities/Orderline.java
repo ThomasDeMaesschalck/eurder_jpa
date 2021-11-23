@@ -1,66 +1,49 @@
 package com.switchfully.eurder.domain.entities;
 
+import lombok.*;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
-import java.util.UUID;
 
+@Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "orderline", schema = "eurder")
 public class Orderline {
 
-    private final Long itemId;
-    private final String name;
-    private final String description;
-    private final BigDecimal salePrice;
-    private final int amount;
-    private final LocalDate shippingDate;
+    @Id
+    @GeneratedValue
+    private int id;
 
-    public Orderline(Long itemId, String name, String description, BigDecimal salePrice, int amount, LocalDate shippingDate) {
-        this.itemId = itemId;
-        this.name = name;
-        this.description = description;
-        this.salePrice = salePrice;
-        this.amount = amount;
-        this.shippingDate = shippingDate;
-    }
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Orderline orderline = (Orderline) o;
-        return Objects.equals(itemId, orderline.itemId);
-    }
+    @OneToOne
+    @JoinColumn(name = "item_id")
+    private Item item;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(itemId);
-    }
+    @Column(name = "name")
+    private String name;
 
-    public Long getItemId() {
-        return itemId;
-    }
+    @Column(name = "description")
+    private String description;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "sale_price")
+    private BigDecimal salePrice;
 
-    public String getDescription() {
-        return description;
-    }
+    @Column(name = "amount")
+    private int amount;
 
-    public BigDecimal getSalePrice() {
-        return salePrice;
-    }
+    @Column(name = "shipping_date")
+    private LocalDate shippingDate;
 
-    public int getAmount() {
-        return amount;
-    }
 
-    public LocalDate getShippingDate() {
-        return shippingDate;
-    }
-
-    public BigDecimal getOrderlineTotal(){
+    public BigDecimal getOrderlineTotal() {
         return salePrice.multiply(BigDecimal.valueOf(amount));
     }
 }

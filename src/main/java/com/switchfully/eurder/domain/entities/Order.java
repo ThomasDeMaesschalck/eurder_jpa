@@ -1,55 +1,35 @@
 package com.switchfully.eurder.domain.entities;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import lombok.*;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Set;
+
+@Entity
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "order", schema = "eurder")
 public class Order {
 
-    private final UUID id;
-    private final Long customerId;
-    private final Set<Orderline> orderlines;
+    @Id
+    @GeneratedValue
+    private Long id;
 
-    public Order(Long customerId) {
-        this.id = UUID.randomUUID();
-        this.customerId = customerId;
-        this.orderlines = new HashSet<>();
-    }
+    @OneToOne
+    @JoinColumn(name = "customer_id_fk")
+    private User customer;
 
-    public void addOrderline(Orderline orderline) {
-        orderlines.add(orderline);
-    }
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private Set<Orderline> orderlines;
+
 
     public BigDecimal getTotalPriceOfOrder() {
         return orderlines.stream()
                 .map(Orderline::getOrderlineTotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public Long getCustomerId() {
-        return customerId;
-    }
-
-    public Set<Orderline> getOrderlines() {
-        return orderlines;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Order order = (Order) o;
-        return Objects.equals(id, order.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 }

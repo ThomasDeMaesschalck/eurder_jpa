@@ -13,7 +13,7 @@ import java.util.UUID;
 @Component
 public class ReportMapper {
 
-    public OrderReportDTO toOrderReportDTO(UUID orderId, List<OrderlineReportDTO> orderlines) {
+    public OrderReportDTO toOrderReportDTO(Long orderId, List<OrderlineReportDTO> orderlines) {
         return new OrderReportDTO(orderId, orderlines);
     }
 
