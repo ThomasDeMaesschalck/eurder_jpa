@@ -26,7 +26,7 @@ public class OrderController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO createItem(@RequestHeader(value = "userId") UUID userId,
+    public OrderDTO createOrder(@RequestHeader(value = "userId") Long userId,
                                @RequestBody CreateOrderDTO createOrderDTO) {
         logger.info("User with id " + userId + " is making an order");
         return orderService.save(userId, createOrderDTO);

@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @RestController
 @RequestMapping(path = "/reports")
 public class ReportController {
@@ -24,7 +22,7 @@ public class ReportController {
 
     @GetMapping(path = "{customerId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public OrdersReportForCustomerDTO getAllOrdersFromUser(@RequestHeader(value = "userId") UUID userId, @PathVariable UUID customerId) {
+    public OrdersReportForCustomerDTO getAllOrdersFromUser(@RequestHeader(value = "userId") Long userId, @PathVariable Long customerId) {
         logger.info("User with id " + userId + " getting report for user with id " + customerId);
         return reportService.getReportOfOrdersForCustomer(userId, customerId);
     }

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,7 +28,7 @@ public class ReportService {
         this.reportMapper = reportMapper;
     }
 
-    public OrdersReportForCustomerDTO getReportOfOrdersForCustomer(UUID userId, UUID customerId) {
+    public OrdersReportForCustomerDTO getReportOfOrdersForCustomer(Long userId, Long customerId) {
         assertIdOfRetrieverIsSameAsCustomerIdOfOrders(userId, customerId);
         userService.assertUserId(customerId);
 
@@ -40,7 +39,7 @@ public class ReportService {
         return reportMapper.toOrdersReportForCustomerDTO(listOfAllOrdersFromCustomer, calculateTotalOfAllCustomerOrders(listOfAllOrdersFromCustomer));
     }
 
-    private List<Order> getAllOrdersOfCustomer(UUID customerId) {
+    private List<Order> getAllOrdersOfCustomer(Long customerId) {
         return orderRepository.getOrders().stream()
                 .filter(order -> order.getCustomerId().equals(customerId))
                 .collect(Collectors.toList());
@@ -68,7 +67,7 @@ public class ReportService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private void assertIdOfRetrieverIsSameAsCustomerIdOfOrders(UUID userId, UUID customerId) {
+    private void assertIdOfRetrieverIsSameAsCustomerIdOfOrders(Long userId, Long customerId) {
         if (!userId.equals(customerId)) {
             throw new IllegalArgumentException("You can't view report from another customer");
         }

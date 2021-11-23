@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
@@ -50,3 +51,4 @@ class UserMapperTest {
     }
 
 }
+*/

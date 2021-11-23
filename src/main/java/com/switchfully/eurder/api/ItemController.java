@@ -27,14 +27,14 @@ public class ItemController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDTO> getAllItems(@RequestHeader(value = "adminId") UUID adminId) {
+    public List<ItemDTO> getAllItems(@RequestHeader(value = "adminId") Long adminId) {
         logger.info("Admin with id " + adminId + " getting all items");
         return itemService.getAllItems(adminId);
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDTO createItem(@RequestHeader(value = "adminId") UUID adminId,
+    public ItemDTO createItem(@RequestHeader(value = "adminId") Long adminId,
                               @RequestBody CreateItemDTO createItemDTO) {
         logger.info("Admin with id " + adminId + " is making new item " + createItemDTO.getName());
         return itemService.save(adminId, createItemDTO);
@@ -42,7 +42,7 @@ public class ItemController {
 
     @PutMapping(path = "{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem(@RequestHeader(value = "adminId") UUID adminId, @PathVariable UUID itemId,
+    public ItemDTO updateItem(@RequestHeader(value = "adminId") Long adminId, @PathVariable UUID itemId,
                               @RequestBody UpdateItemDTO itemDTO) {
         logger.info("Admin with id " + adminId + " is updating item with id " + itemId);
         return itemService.update(adminId, itemDTO, itemId);

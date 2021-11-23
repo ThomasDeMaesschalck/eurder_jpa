@@ -21,10 +21,24 @@ public class UserMapper {
     }
 
     public User toEntity(CreateUserDTO userDTO) {
-        return User.createUser(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getAddress(), userDTO.getPhoneNumber());
+        return User.builder()
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .email(userDTO.getEmail())
+                .address(userDTO.getAddress())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .role(User.Role.REGISTERED)
+                .build();
     }
 
     public User toAdminEntity(CreateUserDTO userDTO) {
-        return User.createAdmin(userDTO.getFirstName(), userDTO.getLastName(), userDTO.getEmail(), userDTO.getAddress(), userDTO.getPhoneNumber());
+        return User.builder()
+                .firstName(userDTO.getFirstName())
+                .lastName(userDTO.getLastName())
+                .email(userDTO.getEmail())
+                .address(userDTO.getAddress())
+                .phoneNumber(userDTO.getPhoneNumber())
+                .role(User.Role.ADMIN)
+                .build();
     }
 }

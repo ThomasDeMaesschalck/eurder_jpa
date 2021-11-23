@@ -9,10 +9,10 @@ import java.util.UUID;
 public class Order {
 
     private final UUID id;
-    private final UUID customerId;
+    private final Long customerId;
     private final Set<Orderline> orderlines;
 
-    public Order(UUID customerId) {
+    public Order(Long customerId) {
         this.id = UUID.randomUUID();
         this.customerId = customerId;
         this.orderlines = new HashSet<>();
@@ -32,7 +32,7 @@ public class Order {
         return id;
     }
 
-    public UUID getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 

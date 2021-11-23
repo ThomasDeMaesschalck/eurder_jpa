@@ -6,7 +6,7 @@ import java.util.UUID;
 
 public class UserDTO {
 
-    private final UUID id;
+    private final Long id;
     private final String firstName;
     private final String lastName;
     private final String email;
@@ -14,7 +14,7 @@ public class UserDTO {
     private final String phoneNumber;
     private final User.Role role;
 
-    private UserDTO(UUID id, String firstName, String lastName, String email, String address, String phoneNumber, User.Role role) {
+    private UserDTO(Long id, String firstName, String lastName, String email, String address, String phoneNumber, User.Role role) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -24,7 +24,7 @@ public class UserDTO {
         this.role = role;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -53,7 +53,7 @@ public class UserDTO {
     }
 
     public static class UserDTOBuilder {
-        private UUID id;
+        private Long id;
         private String firstName;
         private String lastName;
         private String email;
@@ -69,7 +69,7 @@ public class UserDTO {
             return new UserDTO(id, firstName, lastName, email, address, phoneNumber, role);
         }
 
-        public UserDTO.UserDTOBuilder withId(UUID id) {
+        public UserDTO.UserDTOBuilder withId(Long id) {
             this.id = id;
             return this;
         }

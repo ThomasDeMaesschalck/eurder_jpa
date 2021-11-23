@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/users")
@@ -33,14 +32,14 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> getAllUsers(@RequestHeader(value = "adminId") UUID adminId) {
+    public List<UserDTO> getAllUsers(@RequestHeader(value = "adminId") Long adminId) {
         logger.info("Admin with id " + adminId + " getting all users");
         return userService.getAllUsers(adminId);
     }
 
     @GetMapping(path = "{userId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUserById(@RequestHeader(value = "adminId") UUID adminId, @PathVariable UUID userId) {
+    public UserDTO getUserById(@RequestHeader(value = "adminId") Long adminId, @PathVariable Long userId) {
         logger.info("Admin with id " + adminId + " getting user with id " + userId);
         return userService.getById(adminId, userId);
     }

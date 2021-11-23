@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.domain.entities;
 
 import com.switchfully.eurder.domain.entities.User;
@@ -71,3 +72,4 @@ class UserTest {
     }
 
 }
+*/

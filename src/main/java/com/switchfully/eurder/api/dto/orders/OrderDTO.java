@@ -8,11 +8,11 @@ import java.util.UUID;
 public class OrderDTO {
 
     private final UUID id;
-    private final UUID customerId;
+    private final Long customerId;
     private final Set<OrderlineDTO> orderlineDTOSet;
     private final BigDecimal totalOrderPrice;
 
-    public OrderDTO(UUID id, UUID customerId, BigDecimal totalOrderPrice) {
+    public OrderDTO(UUID id, Long customerId, BigDecimal totalOrderPrice) {
         orderlineDTOSet = new HashSet<>();
         this.id = id;
         this.customerId = customerId;
@@ -23,7 +23,7 @@ public class OrderDTO {
         return id;
     }
 
-    public UUID getCustomerId() {
+    public Long getCustomerId() {
         return customerId;
     }
 

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,33 +40,32 @@ public class UserService {
         return userMapper.toDTO(created);
     }
 
-    public List<UserDTO> getAllUsers(UUID adminId) {
+    public List<UserDTO> getAllUsers(Long adminId) {
         assertAdminId(adminId);
 
-        return userRepository.getUsers().stream()
+        return userRepository.findAll().stream()
                 .sorted(Comparator.comparing(User::getLastName).thenComparing(User::getFirstName))
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getById(UUID adminId, UUID userId) {
+    public UserDTO getById(Long adminId, Long userId) {
         assertAdminId(adminId);
 
-        return userMapper.toDTO(userRepository.getById(userId));
+        return userMapper.toDTO(userRepository.findById(userId).get());
     }
 
-    public void assertAdminId(UUID adminId) {
-        User user = userRepository.getById(adminId);
-        if (user.getRole() != User.Role.ADMIN) {
+    public void assertAdminId(Long adminId) {
+        Optional<User> user = userRepository.findById(adminId);
+        if (user.get().getRole() != User.Role.ADMIN) {
             throw new IllegalArgumentException("Unauthorized user");
         }
     }
 
-    public void assertUserId(UUID userId) {
-        try {
-            userRepository.getById(userId);
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException(exception.getMessage());
+    public void assertUserId(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Invalid user id");
         }
     }
 

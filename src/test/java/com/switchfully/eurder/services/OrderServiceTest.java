@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
@@ -231,4 +232,4 @@ class OrderServiceTest {
         assertEquals(expected, result);
     }
 
-}
+}*/

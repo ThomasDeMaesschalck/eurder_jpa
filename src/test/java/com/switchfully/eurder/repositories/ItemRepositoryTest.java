@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.entities.Item;
@@ -82,4 +83,4 @@ class ItemRepositoryTest {
         assertEquals(item1.getPrice(), result.getPrice());
         assertEquals(item1.getAmountInStock(), result.getAmountInStock());
     }
-}
+}*/

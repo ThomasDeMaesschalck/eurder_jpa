@@ -27,14 +27,14 @@ public class ItemService {
     }
 
 
-    public ItemDTO save(UUID adminId, CreateItemDTO createItemDTO) {
+    public ItemDTO save(Long adminId, CreateItemDTO createItemDTO) {
         userService.assertAdminId(adminId);
 
         Item created = itemRepository.save(itemMapper.toEntity(createItemDTO));
         return itemMapper.toDTO(created);
     }
 
-    public ItemDTO update(UUID adminId, UpdateItemDTO updateItemDTO, UUID itemId) {
+    public ItemDTO update(Long adminId, UpdateItemDTO updateItemDTO, UUID itemId) {
         userService.assertAdminId(adminId);
         assertItemId(itemId);
 
@@ -42,7 +42,7 @@ public class ItemService {
         return itemMapper.toDTO(update);
     }
 
-    public List<ItemDTO> getAllItems(UUID adminId) {
+    public List<ItemDTO> getAllItems(Long adminId) {
         userService.assertAdminId(adminId);
 
         return itemMapper.toDTO(itemRepository.getItems());

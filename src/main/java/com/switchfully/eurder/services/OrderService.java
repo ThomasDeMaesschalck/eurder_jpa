@@ -36,7 +36,7 @@ public class OrderService {
         this.orderRepository = orderRepository;
     }
 
-    public OrderDTO save(UUID userId, CreateOrderDTO createOrderDTO) {
+    public OrderDTO save(Long userId, CreateOrderDTO createOrderDTO) {
         userService.assertUserId(userId);
 
         Order order = processOrder(createOrderDTO, userId);
@@ -44,7 +44,7 @@ public class OrderService {
         return orderMapper.toDTO(orderRepository.save(order));
     }
 
-    private Order processOrder(CreateOrderDTO createOrderDTO, UUID userId) {
+    private Order processOrder(CreateOrderDTO createOrderDTO, Long userId) {
 
         createOrderDTO.getOrderlines().forEach(this::assertOrderlineIdAndOrderedAmount);
 

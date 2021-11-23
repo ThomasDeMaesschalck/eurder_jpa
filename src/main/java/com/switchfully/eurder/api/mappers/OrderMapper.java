@@ -22,7 +22,7 @@ public class OrderMapper {
         return orderDTO;
     }
 
-    public Order toEntity(UUID customerId){
+    public Order toEntity(Long customerId){
         return new Order(customerId);
     }
 
