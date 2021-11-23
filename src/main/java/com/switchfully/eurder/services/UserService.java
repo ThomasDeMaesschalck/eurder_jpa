@@ -57,7 +57,7 @@ public class UserService {
 
     public void assertAdminId(Long adminId) {
         Optional<User> user = userRepository.findById(adminId);
-        if (user.get().getRole() != User.Role.ADMIN) {
+        if (user.isEmpty()) {
             throw new IllegalArgumentException("Unauthorized user");
         }
     }

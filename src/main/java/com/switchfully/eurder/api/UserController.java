@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -25,7 +26,7 @@ public class UserController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDTO createUser(@RequestBody CreateUserDTO createUserDTO) {
+    public UserDTO createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
         logger.info("Creating new user for email: " + createUserDTO.getEmail());
         return userService.createUser(createUserDTO);
     }

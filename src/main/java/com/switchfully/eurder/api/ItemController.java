@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,7 +35,7 @@ public class ItemController {
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ItemDTO createItem(@RequestHeader(value = "adminId") Long adminId,
-                              @RequestBody CreateItemDTO createItemDTO) {
+                              @Valid @RequestBody CreateItemDTO createItemDTO) {
         logger.info("Admin with id " + adminId + " is making new item " + createItemDTO.getName());
         return itemService.save(adminId, createItemDTO);
     }
@@ -42,7 +43,7 @@ public class ItemController {
     @PutMapping(path = "{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ItemDTO updateItem(@RequestHeader(value = "adminId") Long adminId, @PathVariable Long itemId,
-                              @RequestBody UpdateItemDTO itemDTO) {
+                            @Valid @RequestBody UpdateItemDTO itemDTO) {
         logger.info("Admin with id " + adminId + " is updating item with id " + itemId);
         return itemService.update(adminId, itemDTO, itemId);
     }
