@@ -19,7 +19,7 @@ public class Orderline {
     @GeneratedValue
     private int id;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
 
