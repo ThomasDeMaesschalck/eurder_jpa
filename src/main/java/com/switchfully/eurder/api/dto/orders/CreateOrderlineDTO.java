@@ -4,15 +4,15 @@ import java.util.UUID;
 
 public class CreateOrderlineDTO {
 
-    private final UUID ItemId;
+    private final Long ItemId;
     private final int amount;
 
-    public CreateOrderlineDTO(UUID itemId, int amount) {
+    public CreateOrderlineDTO(Long itemId, int amount) {
         ItemId = itemId;
         this.amount = amount;
     }
 
-    public UUID getItemId() {
+    public Long getItemId() {
         return ItemId;
     }
 

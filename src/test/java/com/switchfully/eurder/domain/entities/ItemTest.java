@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.domain.entities;
 
 import org.junit.jupiter.api.DisplayName;
@@ -108,4 +109,4 @@ class ItemTest {
         assertFalse(myitem.getId().toString().isBlank());
     }
 
-}
+}*/

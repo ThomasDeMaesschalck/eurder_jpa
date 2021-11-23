@@ -1,3 +1,4 @@
+/*
 package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
@@ -85,4 +86,4 @@ class ItemMapperTest {
     }
 
 
-}
+}*/

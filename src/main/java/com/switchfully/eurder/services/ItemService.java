@@ -10,7 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ItemService {
@@ -34,29 +35,29 @@ public class ItemService {
         return itemMapper.toDTO(created);
     }
 
-    public ItemDTO update(Long adminId, UpdateItemDTO updateItemDTO, UUID itemId) {
+    public ItemDTO update(Long adminId, UpdateItemDTO updateItemDTO, Long itemId) {
         userService.assertAdminId(adminId);
         assertItemId(itemId);
 
-        Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO,itemId ));
+        Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO, itemId));
         return itemMapper.toDTO(update);
     }
 
     public List<ItemDTO> getAllItems(Long adminId) {
         userService.assertAdminId(adminId);
 
-        return itemMapper.toDTO(itemRepository.getItems());
+        return itemRepository.findAll().stream().map(itemMapper::toDTO).collect(Collectors.toList());
     }
 
-    public Item getById(UUID itemId){
-        return itemRepository.getById(itemId);
+    public Item getById(Long itemId) {
+        return itemRepository.findById(itemId).get();
     }
 
-    public void assertItemId(UUID itemId) {
-        try {
-            itemRepository.getById(itemId);
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("Not possible: " + exception.getMessage());
+    public void assertItemId(Long itemId) {
+        Optional<Item> itemOptional = itemRepository.findById(itemId);
+
+        if (itemOptional.isEmpty()) {
+            throw new IllegalArgumentException("Item id not found");
         }
     }
 

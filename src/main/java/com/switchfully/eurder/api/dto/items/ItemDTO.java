@@ -5,13 +5,13 @@ import java.util.UUID;
 
 public class ItemDTO {
 
-    private final UUID id;
+    private final Long id;
     private final String name;
     private final String description;
     private final BigDecimal price;
     private final int amountInStock;
 
-    private ItemDTO(UUID id, String name, String description, BigDecimal price, int amountInStock) {
+    private ItemDTO(Long id, String name, String description, BigDecimal price, int amountInStock) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -19,7 +19,7 @@ public class ItemDTO {
         this.amountInStock = amountInStock;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
@@ -40,7 +40,7 @@ public class ItemDTO {
     }
 
     public static class ItemDTOBuilder {
-        private UUID id;
+        private Long id;
         private String name;
         private String description;
         private BigDecimal price;
@@ -54,7 +54,7 @@ public class ItemDTO {
             return new ItemDTO(id, name, description, price, amountInStock);
         }
 
-        public ItemDTOBuilder withId(UUID id) {
+        public ItemDTOBuilder withId(Long id) {
             this.id = id;
             return this;
         }

@@ -7,14 +7,14 @@ import java.util.UUID;
 
 public class Orderline {
 
-    private final UUID itemId;
+    private final Long itemId;
     private final String name;
     private final String description;
     private final BigDecimal salePrice;
     private final int amount;
     private final LocalDate shippingDate;
 
-    public Orderline(UUID itemId, String name, String description, BigDecimal salePrice, int amount, LocalDate shippingDate) {
+    public Orderline(Long itemId, String name, String description, BigDecimal salePrice, int amount, LocalDate shippingDate) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
@@ -36,7 +36,7 @@ public class Orderline {
         return Objects.hash(itemId);
     }
 
-    public UUID getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 

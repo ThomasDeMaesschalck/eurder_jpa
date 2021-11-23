@@ -7,7 +7,6 @@ import com.switchfully.eurder.domain.entities.Item;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
@@ -29,22 +28,22 @@ public class ItemMapper {
     }
 
     public Item toEntity(CreateItemDTO createItemDTO) {
-        return Item.ItemBuilder.item()
-                .withName(createItemDTO.getName())
-                .withDescription(createItemDTO.getDescription())
-                .withPrice(createItemDTO.getPrice())
-                .withAmountInStock(createItemDTO.getAmountInStock())
-                .buildNewItem();
+        return Item.builder()
+                .name(createItemDTO.getName())
+                .description(createItemDTO.getDescription())
+                .price(createItemDTO.getPrice())
+                .amountInStock(createItemDTO.getAmountInStock())
+                .build();
     }
 
-    public Item toEntity(UpdateItemDTO updateItemDTO, UUID itemUUID) {
-        return Item.ItemBuilder.item()
-                .withId(itemUUID)
-                .withName(updateItemDTO.getName())
-                .withDescription(updateItemDTO.getDescription())
-                .withPrice(updateItemDTO.getPrice())
-                .withAmountInStock(updateItemDTO.getAmountInStock())
-                .buildUpdatedNewItem();
+    public Item toEntity(UpdateItemDTO updateItemDTO, Long itemUUID) {
+        return Item.builder()
+                .id(itemUUID)
+                .name(updateItemDTO.getName())
+                .description(updateItemDTO.getDescription())
+                .price(updateItemDTO.getPrice())
+                .amountInStock(updateItemDTO.getAmountInStock())
+                .build();
     }
 
 

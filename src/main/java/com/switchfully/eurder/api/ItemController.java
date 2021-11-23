@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "/items")
@@ -42,7 +41,7 @@ public class ItemController {
 
     @PutMapping(path = "{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem(@RequestHeader(value = "adminId") Long adminId, @PathVariable UUID itemId,
+    public ItemDTO updateItem(@RequestHeader(value = "adminId") Long adminId, @PathVariable Long itemId,
                               @RequestBody UpdateItemDTO itemDTO) {
         logger.info("Admin with id " + adminId + " is updating item with id " + itemId);
         return itemService.update(adminId, itemDTO, itemId);

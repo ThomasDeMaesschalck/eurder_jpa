@@ -6,13 +6,13 @@ import java.util.UUID;
 
 public class OrderlineDTO {
 
-    private final UUID itemId;
+    private final Long itemId;
     private final BigDecimal salesPrice;
     private final int amount;
     private final BigDecimal subTotal;
     private final LocalDate shippingDate;
 
-    public OrderlineDTO(UUID itemId, BigDecimal salesPrice, int amount, BigDecimal subTotal, LocalDate shippingDate) {
+    public OrderlineDTO(Long itemId, BigDecimal salesPrice, int amount, BigDecimal subTotal, LocalDate shippingDate) {
         this.itemId = itemId;
         this.salesPrice = salesPrice;
         this.amount = amount;
@@ -20,7 +20,7 @@ public class OrderlineDTO {
         this.shippingDate = shippingDate;
     }
 
-    public UUID getItemId() {
+    public Long getItemId() {
         return itemId;
     }
 
