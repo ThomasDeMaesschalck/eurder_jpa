@@ -3,7 +3,7 @@ package com.switchfully.eurder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.switchfully.eurder", "com.switchsecure"})
 public class EurderApplication {
 
     public static void main(String[] args) {

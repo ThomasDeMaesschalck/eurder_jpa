@@ -38,9 +38,6 @@ public class User {
 
     public enum Role {
         REGISTERED,
-        ADMIN;
-
-        Role() {
-        }
+        ADMIN
     }
 }

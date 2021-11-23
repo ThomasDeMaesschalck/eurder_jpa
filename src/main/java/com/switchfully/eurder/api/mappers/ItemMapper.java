@@ -23,10 +23,6 @@ public class ItemMapper {
                 .build();
     }
 
-    public List<ItemDTO> toDTO(List<Item> items) {
-        return items.stream().map(this::toDTO).collect(Collectors.toList());
-    }
-
     public Item toEntity(CreateItemDTO createItemDTO) {
         return Item.builder()
                 .name(createItemDTO.getName())

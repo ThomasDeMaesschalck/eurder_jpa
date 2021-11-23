@@ -40,31 +40,20 @@ public class UserService {
         return userMapper.toDTO(created);
     }
 
-    public List<UserDTO> getAllUsers(Long adminId) {
-        assertAdminId(adminId);
-
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .sorted(Comparator.comparing(User::getLastName).thenComparing(User::getFirstName))
                 .map(userMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getById(Long adminId, Long userId) {
-        assertAdminId(adminId);
-
-        return userMapper.toDTO(userRepository.findById(userId).get());
+    public UserDTO getById(Long userId) {
+        return userMapper.toDTO(userRepository.getById(userId));
     }
 
     public User findById(Long userId) {
         assertUserId(userId);
-        return userRepository.findById(userId).get();
-    }
-
-    public void assertAdminId(Long adminId) {
-        Optional<User> user = userRepository.findById(adminId);
-        if (user.isEmpty()) {
-            throw new IllegalArgumentException("Unauthorized user");
-        }
+        return userRepository.getById(userId);
     }
 
     public void assertUserId(Long userId) {

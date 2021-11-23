@@ -3,6 +3,7 @@ package com.switchfully.eurder.api;
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
 import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.services.UserService;
+import com.switchsecure.SecurityGuard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,18 @@ public class UserController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDTO> getAllUsers(@RequestHeader(value = "adminId") Long adminId) {
-        logger.info("Admin with id " + adminId + " getting all users");
-        return userService.getAllUsers(adminId);
+    @SecurityGuard(SecurityGuard.ApiUserRole.ADMIN)
+    public List<UserDTO> getAllUsers() {
+        logger.info("Admin getting all users");
+        return userService.getAllUsers();
     }
 
     @GetMapping(path = "{userId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public UserDTO getUserById(@RequestHeader(value = "adminId") Long adminId, @PathVariable Long userId) {
-        logger.info("Admin with id " + adminId + " getting user with id " + userId);
-        return userService.getById(adminId, userId);
+    @SecurityGuard(SecurityGuard.ApiUserRole.ADMIN)
+    public UserDTO getUserById(@PathVariable Long userId) {
+        logger.info("Admin getting user with id " + userId);
+        return userService.getById(userId);
     }
 
 }

@@ -19,7 +19,6 @@ public class OrderMapper {
         order.getOrderlines().stream()
                 .map(orderline -> new OrderlineDTO(orderline.getItem().getId(), orderline.getSalePrice(), orderline.getAmount(), orderline.getOrderlineTotal(), orderline.getShippingDate()))
                 .forEach(orderDTO::addOrderlineDTO);
-
         return orderDTO;
     }
 

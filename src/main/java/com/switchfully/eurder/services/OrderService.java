@@ -49,9 +49,7 @@ public class OrderService {
     private Order processOrder(CreateOrderDTO createOrderDTO, Long userId) {
 
         User user = userService.findById(userId);
-
         createOrderDTO.getOrderlines().forEach(this::assertOrderlineIdAndOrderedAmount);
-
 
         Order order = orderMapper.toEntity(user);
 

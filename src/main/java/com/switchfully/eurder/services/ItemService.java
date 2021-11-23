@@ -17,40 +17,32 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemMapper itemMapper;
-    private final UserService userService;
     private final ItemRepository itemRepository;
 
     @Autowired
-    public ItemService(ItemMapper itemMapper, UserService userService, ItemRepository itemRepository) {
+    public ItemService(ItemMapper itemMapper, ItemRepository itemRepository) {
         this.itemMapper = itemMapper;
-        this.userService = userService;
         this.itemRepository = itemRepository;
     }
 
-
-    public ItemDTO save(Long adminId, CreateItemDTO createItemDTO) {
-        userService.assertAdminId(adminId);
-
+    public ItemDTO save(CreateItemDTO createItemDTO) {
         Item created = itemRepository.save(itemMapper.toEntity(createItemDTO));
         return itemMapper.toDTO(created);
     }
 
-    public ItemDTO update(Long adminId, UpdateItemDTO updateItemDTO, Long itemId) {
-        userService.assertAdminId(adminId);
+    public ItemDTO update(UpdateItemDTO updateItemDTO, Long itemId) {
         assertItemId(itemId);
 
         Item update = itemRepository.save(itemMapper.toEntity(updateItemDTO, itemId));
         return itemMapper.toDTO(update);
     }
 
-    public List<ItemDTO> getAllItems(Long adminId) {
-        userService.assertAdminId(adminId);
-
+    public List<ItemDTO> getAllItems() {
         return itemRepository.findAll().stream().map(itemMapper::toDTO).collect(Collectors.toList());
     }
 
     public Item getById(Long itemId) {
-        return itemRepository.findById(itemId).get();
+        return itemRepository.getById(itemId);
     }
 
     public void assertItemId(Long itemId) {
