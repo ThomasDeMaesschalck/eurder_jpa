@@ -1,24 +1,29 @@
-/*
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.entities.Item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DataJpaTest
+@TestPropertySource(properties = "spring.jpa.properties.hibernate.default_schema=eurder")
 class ItemRepositoryTest {
+
+    @Autowired
     private ItemRepository itemRepository;
+
     private Item item1;
     private Item item2;
 
     @BeforeEach
     void setUp() {
-        itemRepository = new ItemRepository();
 
         String name = "Big item";
         String name2 = "Another item";
@@ -26,19 +31,19 @@ class ItemRepositoryTest {
         BigDecimal price = BigDecimal.valueOf(500);
         int amountInStock = 5;
 
-        item1 = Item.ItemBuilder.item()
-                .withName(name)
-                .withDescription(description)
-                .withPrice(price)
-                .withAmountInStock(amountInStock)
-                .buildNewItem();
+        item1 = Item.builder()
+                .name(name)
+                .description(description)
+                .price(price)
+                .amountInStock(amountInStock)
+                .build();
 
-        item2 = Item.ItemBuilder.item()
-                .withName(name2)
-                .withDescription(description)
-                .withPrice(price)
-                .withAmountInStock(amountInStock)
-                .buildNewItem();
+        item2 = Item.builder()
+                .name(name2)
+                .description(description)
+                .price(price)
+                .amountInStock(amountInStock)
+                .build();
     }
 
     @DisplayName("When saving items they are added to the repository ")
@@ -48,7 +53,7 @@ class ItemRepositoryTest {
         itemRepository.save(item2);
 
         int expected = 2;
-        int result = itemRepository.getItems().size();
+        int result = itemRepository.findAll().size();
 
         assertEquals(expected, result);
     }
@@ -58,7 +63,7 @@ class ItemRepositoryTest {
     void whenSavingItem_thenRepositoryContainsThisItem() {
         itemRepository.save(item1);
 
-        Item result = itemRepository.getItems().get(0);
+        Item result = itemRepository.findAll().get(0);
 
         assertEquals(item1.getId(), result.getId());
         assertEquals(item1.getName(), result.getName());
@@ -72,8 +77,8 @@ class ItemRepositoryTest {
     void whenGettingById_thenUserIsReturned() {
         itemRepository.save(item1);
 
-        Item result = itemRepository.getItems().get(0);
-        UUID idOfItem = result.getId();
+        Item result = itemRepository.findAll().get(0);
+        Long idOfItem = result.getId();
 
         result = itemRepository.getById(idOfItem);
 
@@ -83,4 +88,4 @@ class ItemRepositoryTest {
         assertEquals(item1.getPrice(), result.getPrice());
         assertEquals(item1.getAmountInStock(), result.getAmountInStock());
     }
-}*/
+}
