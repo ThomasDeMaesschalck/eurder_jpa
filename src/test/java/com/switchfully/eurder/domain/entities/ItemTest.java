@@ -1,4 +1,4 @@
-/*
+/* TODO: this logic has been moved to the DTO with javax validation
 package com.switchfully.eurder.domain.entities;
 
 import org.junit.jupiter.api.DisplayName;

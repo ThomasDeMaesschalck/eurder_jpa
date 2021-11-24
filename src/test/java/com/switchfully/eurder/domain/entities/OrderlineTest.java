@@ -1,4 +1,3 @@
-/*
 package com.switchfully.eurder.domain.entities;
 
 import org.junit.jupiter.api.Assertions;
@@ -6,15 +5,16 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.UUID;
 
 class OrderlineTest {
 
     @Test
     @DisplayName("Orderline total calculation works")
     void whenCalculatingOrderLineTotal_ValueIsCalculated() {
-        Orderline orderline = new Orderline(UUID.randomUUID(), "Product", "Description", BigDecimal.valueOf(5), 5, LocalDate.now());
+        Orderline orderline = Orderline.builder()
+                .amount(5)
+                .salePrice(BigDecimal.valueOf(5))
+                .build();
 
         BigDecimal expected = BigDecimal.valueOf(25);
 
@@ -22,4 +22,4 @@ class OrderlineTest {
 
         Assertions.assertEquals(expected, result);
     }
-}*/
+}
