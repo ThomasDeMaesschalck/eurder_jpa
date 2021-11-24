@@ -1,4 +1,3 @@
-/*
 package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
@@ -9,29 +8,68 @@ import com.switchfully.eurder.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 class UserServiceTest {
 
     private CreateUserDTO userDTO;
+    private UserDTO userDTOResponse;
+    private UserDTO adminDTOResponse;
+    private User user;
+    private User adminUser;
     private UserService userService;
+    private UserMapper userMapperMock;
+    private UserRepository userRepositoryMock;
 
     @BeforeEach
     void setUp() {
         userDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
 
-        userService = new UserService(new UserMapper(), new UserRepository());
+        userDTOResponse = UserDTO.UserDTOBuilder.item()
+                .withFirstName("firstname")
+                .withLastName("lastname")
+                .withRole(User.Role.REGISTERED).build();
+
+        adminDTOResponse = UserDTO.UserDTOBuilder.item()
+                .withFirstName("firstname")
+                .withLastName("lastname")
+                .withRole(User.Role.ADMIN).build();
+
+        user = User.builder()
+                .firstName("firstname")
+                .lastName("lastname")
+                .role(User.Role.REGISTERED)
+                .build();
+
+        adminUser = User.builder()
+                .firstName("firstname")
+                .lastName("lastname")
+                .role(User.Role.ADMIN)
+                .build();
+
+        userMapperMock = Mockito.mock(UserMapper.class);
+        userRepositoryMock = Mockito.mock(UserRepository.class);
+
+        userService = new UserService(userMapperMock, userRepositoryMock);
     }
 
     @Test
     @DisplayName("Saving a user results in user saved in repo")
-    void whenSavingTwoUsers_sizeOfRepoIsTwo() {
+    void whenSavingUser_sizeOfRepoIsOne() {
         userService.createUser(userDTO);
-        UserDTO admin = userService.createAdmin(userDTO);
 
-        int expected = 2;
-        int result = userService.getAllUsers(admin.getId()).size();
+        Mockito.when(userMapperMock.toEntity(any(CreateUserDTO.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(List.of(user));
+
+        int expected = 1;
+        int result = userService.getAllUsers().size();
 
         assertEquals(expected, result);
     }
@@ -40,57 +78,47 @@ class UserServiceTest {
     @DisplayName("Saving user details are correct")
     void whenSavingUserAndRetrieved_thenFieldsAreCorrect() {
         userService.createUser(userDTO);
-        UserDTO admin = userService.createAdmin(userDTO);
 
-        UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(List.of(user));
+        Mockito.when(userMapperMock.toDTO(any(User.class))).thenReturn(userDTOResponse);
 
-        assertNotNull(result.getId());
+        UserDTO result = userService.getAllUsers().get(0);
+
         assertEquals(userDTO.getFirstName(), result.getFirstName());
-        assertEquals(userDTO.getLastName(), result.getLastName());
-        assertEquals(userDTO.getAddress(), result.getAddress());
-        assertEquals(userDTO.getEmail(), result.getEmail());
-        assertEquals(userDTO.getPhoneNumber(), result.getPhoneNumber());
         assertEquals(User.Role.REGISTERED, result.getRole());
     }
 
     @Test
     @DisplayName("Admin creation role verification")
     void whenSavingAdmin_thenRoleIsAdmin() {
-        UserDTO admin = userService.createAdmin(userDTO);
+        userService.createAdmin(userDTO);
 
-        UserDTO result = userService.getAllUsers(admin.getId()).get(0);
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(List.of(user));
+        Mockito.when(userMapperMock.toDTO(any(User.class))).thenReturn(adminDTOResponse);
 
-        assertNotNull(result.getId());
+        UserDTO result = userService.getAllUsers().get(0);
         assertEquals(userDTO.getFirstName(), result.getFirstName());
-        assertEquals(userDTO.getLastName(), result.getLastName());
-        assertEquals(userDTO.getAddress(), result.getAddress());
-        assertEquals(userDTO.getEmail(), result.getEmail());
-        assertEquals(userDTO.getPhoneNumber(), result.getPhoneNumber());
         assertEquals(User.Role.ADMIN, result.getRole());
-    }
-
-    @Test
-    @DisplayName("Registered user can't retrieve users list")
-    void whenRegisteredUserCallsGetAllUsers_thenExceptionThrown() {
-        userService.createUser(userDTO);
-        UserDTO admin = userService.createAdmin(userDTO);
-        UserDTO result = userService.getAllUsers(admin.getId()).stream().filter(user -> user.getRole().equals(User.Role.REGISTERED)).findFirst().orElseThrow();
-
-        assertThrows(IllegalArgumentException.class, () -> userService.getAllUsers(result.getId()));
     }
 
     @Test
     @DisplayName("Admin can view users list")
     void whenAdminUserCallsGetAllUsers_theListIsReturned() {
-        UserDTO admin = userService.createAdmin(userDTO);
-
-        assertDoesNotThrow(() -> userService.getAllUsers(admin.getId()));
+        assertDoesNotThrow(() -> userService.getAllUsers());
     }
 
     @Test
     @DisplayName("User type creation system can make admin user")
     void whenAdminNeedsToBeCreated_AdminIsMade() {
-        UserDTO admin = userService.createAdmin(userDTO);
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(List.of(user));
+        Mockito.when(userMapperMock.toAdminEntity(any(CreateUserDTO.class))).thenReturn(adminUser);
+        Mockito.when(userMapperMock.toDTO(any(User.class))).thenReturn(adminDTOResponse);
+
+        UserDTO admin =  userService.createAdmin(userDTO);
+
 
         User.Role expected = User.Role.ADMIN;
 
@@ -100,25 +128,33 @@ class UserServiceTest {
     @Test
     @DisplayName("User type creation system can make regular user")
     void whenUserNeedsToBeCreated_RegisteredUserIsMade() {
-        UserDTO user = userService.createUser(userDTO);
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.findAll()).thenReturn(List.of(user));
+        Mockito.when(userMapperMock.toDTO(any(User.class))).thenReturn(userDTOResponse);
+        Mockito.when(userMapperMock.toEntity(any(CreateUserDTO.class))).thenReturn(user);
+
+        UserDTO member =  userService.createUser(userDTO);
 
         User.Role expected = User.Role.REGISTERED;
 
-        assertEquals(expected, user.getRole());
+        assertEquals(expected, member.getRole());
     }
 
 
     @Test
     @DisplayName("Get by ID works")
     void whenGettingUserById_CorrectUserIsReturned() {
-        UserDTO admin = userService.createAdmin(userDTO);
-        UserDTO user = userService.createUser(userDTO);
+        userService.createUser(userDTO);
 
         String expectedLastName = "lastname";
 
-        UserDTO result = userService.getById(admin.getId(), user.getId());
+        Mockito.when(userRepositoryMock.save(any(User.class))).thenReturn(user);
+        Mockito.when(userRepositoryMock.getById(any(Long.class))).thenReturn(user);
+        Mockito.when(userMapperMock.toDTO(any(User.class))).thenReturn(userDTOResponse);
+
+
+        UserDTO result = userService.getById(1L);
 
         assertEquals(expectedLastName, result.getLastName());
     }
 }
-*/
