@@ -14,7 +14,6 @@ public class CreateOrderDTO {
         this.orderlines.addAll(orderlines);
     }
 
-
     public List<CreateOrderlineDTO> getOrderlines() {
         return orderlines;
     }
