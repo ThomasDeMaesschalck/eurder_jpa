@@ -1,79 +1,85 @@
-/*
 package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
-import com.switchfully.eurder.api.dto.users.CreateUserDTO;
+import com.switchfully.eurder.api.dto.items.ItemDTO;
 import com.switchfully.eurder.api.dto.items.UpdateItemDTO;
-import com.switchfully.eurder.api.dto.users.UserDTO;
 import com.switchfully.eurder.api.mappers.ItemMapper;
-import com.switchfully.eurder.api.mappers.UserMapper;
+import com.switchfully.eurder.domain.entities.Item;
 import com.switchfully.eurder.repositories.ItemRepository;
-import com.switchfully.eurder.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.util.UUID;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 
 class ItemServiceTest {
 
     private CreateItemDTO createItemDTO;
+    private Item item;
+    private ItemDTO itemDTOResponse;
+
+    private ItemMapper itemMapperMock;
+    private ItemRepository itemRepositoryMock;
     private ItemService itemService;
-    private UserDTO admin;
-    private UserDTO user;
 
     @BeforeEach
     void setUp() {
-        createItemDTO = new CreateItemDTO.CreateItemDTOBuilder()
-                .withName("My Item")
-                .withDescription("Fancy item")
-                .withPrice(BigDecimal.valueOf(500))
-                .withAmountInStock(5)
+        createItemDTO = CreateItemDTO.builder()
+                .name("My Item")
+                .description("Fancy item")
+                .price(BigDecimal.valueOf(500))
+                .amountInStock(5)
                 .build();
 
-        UserService userService = new UserService(new UserMapper(), new UserRepository());
-        itemService = new ItemService(new ItemMapper(), userService, new ItemRepository());
+        itemDTOResponse = ItemDTO.ItemDTOBuilder.item()
+                .withId(1L)
+                .withName("new name")
+                .build();
 
-        CreateUserDTO adminDTO = new CreateUserDTO("firstname", "lastname", "email@email.com", "address", "123456");
-        CreateUserDTO userDTO = new CreateUserDTO("firstnameUser", "lastname", "email@email.com", "address", "123456");
+        item = Item.builder().id(1L).build();
 
-        admin = userService.createAdmin(adminDTO);
-        user = userService.createUser(userDTO);
+        itemMapperMock = Mockito.mock(ItemMapper.class);
+        itemRepositoryMock = Mockito.mock(ItemRepository.class);
+
+        itemService = new ItemService(itemMapperMock, itemRepositoryMock);
+
     }
 
     @Test
     @DisplayName("Saving an item results in item saved in repo")
-    void whenSavingItem_SizeOfRepoIsOne() {
-        itemService.save(admin.getId(), createItemDTO);
+    void whenSavingItem_RepoIsCalled() {
+        Mockito.when(itemMapperMock.toEntity(any(CreateItemDTO.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.save(any(Item.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.findAll()).thenReturn(List.of(item));
+
+        itemService.save(createItemDTO);
+
 
         int expected = 1;
-        int result = itemService.getAllItems(admin.getId()).size();
+        int result = itemService.getAllItems().size();
 
         assertEquals(expected, result);
-    }
-
-    @Test
-    @DisplayName("Regular user can not save item")
-    void whenSavingItemAsUser_ExceptionIsThrown() {
-        assertThrows(IllegalArgumentException.class, () -> itemService.save(user.getId(), createItemDTO));
-    }
-
-    @Test
-    @DisplayName("Only admin can get all items list")
-    void whenRetrievingListOFItems_ExceptionThrownForUserButAdminGetsAccess() {
-        assertThrows(IllegalArgumentException.class, () -> itemService.getAllItems(user.getId()));
-        assertDoesNotThrow(() -> itemService.getAllItems(admin.getId()));
+        Mockito.verify(itemRepositoryMock).save(any(Item.class));
     }
 
     @Test
     @DisplayName("Updating an item does not increase repo size")
     void whenUpdatingItem_SizeOfRepoIsStillOne() {
-        itemService.save(admin.getId(), createItemDTO);
+        Mockito.when(itemMapperMock.toEntity(any(CreateItemDTO.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.save(any(Item.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(item));
+        Mockito.when(itemMapperMock.toEntity(any(UpdateItemDTO.class), any(Long.class))).thenReturn(item);
+        Mockito.when(itemMapperMock.toDTO(any(Item.class))).thenReturn(itemDTOResponse);
+        Mockito.when(itemRepositoryMock.findAll()).thenReturn(List.of(item));
 
-        UUID itemUUID = itemService.getAllItems(admin.getId()).get(0).getId();
+        itemService.save(createItemDTO);
+
+        Long itemUUID = itemService.getAllItems().get(0).getId();
         String newName = "new name";
 
         UpdateItemDTO updateItemDTO = new UpdateItemDTO.UpdateItemDTOBuilder()
@@ -83,10 +89,10 @@ class ItemServiceTest {
                 .withPrice(createItemDTO.getPrice())
                 .build();
 
-        itemService.update(admin.getId(), updateItemDTO, itemUUID);
+        itemService.update(updateItemDTO, itemUUID);
 
         int expected = 1;
-        int result = itemService.getAllItems(admin.getId()).size();
+        int result = itemService.getAllItems().size();
 
         assertEquals(expected, result);
     }
@@ -94,9 +100,16 @@ class ItemServiceTest {
     @Test
     @DisplayName("Updating item name changes item name")
     void whenUpdatingItemName_NameGetsChanged() {
-        itemService.save(admin.getId(), createItemDTO);
+        Mockito.when(itemMapperMock.toEntity(any(CreateItemDTO.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.save(any(Item.class))).thenReturn(item);
+        Mockito.when(itemRepositoryMock.findById(any(Long.class))).thenReturn(java.util.Optional.ofNullable(item));
+        Mockito.when(itemMapperMock.toEntity(any(UpdateItemDTO.class), any(Long.class))).thenReturn(item);
+        Mockito.when(itemMapperMock.toDTO(any(Item.class))).thenReturn(itemDTOResponse);
+        Mockito.when(itemRepositoryMock.findAll()).thenReturn(List.of(item));
 
-        UUID itemUUID = itemService.getAllItems(admin.getId()).get(0).getId();
+        itemService.save(createItemDTO);
+
+        Long itemUUID = itemService.getAllItems().get(0).getId();
         String newName = "new name";
 
         UpdateItemDTO updateItemDTO = new UpdateItemDTO.UpdateItemDTOBuilder()
@@ -106,11 +119,11 @@ class ItemServiceTest {
                 .withPrice(createItemDTO.getPrice())
                 .build();
 
-        itemService.update(admin.getId(), updateItemDTO, itemUUID);
+        itemService.update(updateItemDTO, itemUUID);
 
-        String result = itemService.getAllItems(admin.getId()).get(0).getName();
+        String result = itemService.getAllItems().get(0).getName();
 
         assertEquals(newName, result);
     }
 
-}*/
+}
