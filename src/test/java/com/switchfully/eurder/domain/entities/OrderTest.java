@@ -1,4 +1,3 @@
-/*
 package com.switchfully.eurder.domain.entities;
 
 import org.junit.jupiter.api.Assertions;
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 class OrderTest {
@@ -18,17 +18,21 @@ class OrderTest {
 
     @BeforeEach
     void setUp() {
-        order = new Order(UUID.randomUUID());
-        orderline1 = new Orderline(UUID.randomUUID(), "Product", "Description", BigDecimal.valueOf(5), 5, LocalDate.now());
-        orderline2 = new Orderline(UUID.randomUUID(), "Product", "Description", BigDecimal.valueOf(50), 10, LocalDate.now());
-
+        order = new Order();
+        orderline1 =  Orderline.builder()
+                .amount(5)
+                .salePrice(BigDecimal.valueOf(5))
+                .build();
+        orderline2 =  Orderline.builder()
+                .amount(10)
+                .salePrice(BigDecimal.valueOf(50))
+                .build();
     }
 
     @Test
     @DisplayName("Total order price gets calculated correctly")
     void getTotalOrderPrice_ReturnsCorrectAmount() {
-        order.addOrderline(orderline1);
-        order.addOrderline(orderline2);
+        order.setOrderlines(Set.of(orderline1, orderline2));
 
         BigDecimal expected = BigDecimal.valueOf(525);
         BigDecimal result = order.getTotalPriceOfOrder();
@@ -36,4 +40,3 @@ class OrderTest {
         Assertions.assertEquals(expected, result);
     }
 }
-*/
