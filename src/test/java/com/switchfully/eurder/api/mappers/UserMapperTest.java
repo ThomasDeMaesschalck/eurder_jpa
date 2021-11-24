@@ -1,4 +1,3 @@
-/*
 package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dto.users.CreateUserDTO;
@@ -19,7 +18,15 @@ class UserMapperTest {
 
     @BeforeEach
     void setUp() {
-        user = User.createUser("firstname", "lastname", "test@test.com", "street 88", "5849894");
+        user = User.builder()
+                .firstName("firstname")
+                .lastName("lastname")
+                .email("test@test.com")
+                .address("street 88")
+                .phoneNumber("5849894")
+                .role(User.Role.REGISTERED)
+                .build();
+
         userDTO = new CreateUserDTO( "firstname", "lastname", "email@email.com", "address", "123456");
         userMapper = new UserMapper();
     }
@@ -51,4 +58,3 @@ class UserMapperTest {
     }
 
 }
-*/
