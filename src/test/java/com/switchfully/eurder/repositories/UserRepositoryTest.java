@@ -1,85 +1,81 @@
-/*
 package com.switchfully.eurder.repositories;
 
 import com.switchfully.eurder.domain.entities.User;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.TestPropertySource;
 
-import java.util.UUID;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
+@DataJpaTest
+@TestPropertySource(properties = "spring.jpa.properties.hibernate.default_schema=eurder")
 class UserRepositoryTest {
 
+    @Autowired
     private UserRepository userRepository;
-    private User user1;
-    private User user2;
 
-    String firstname;
-    String lastname;
-    String email;
-    String address;
-    String phonenumber;
-    User.Role role;
+    @DisplayName("Repository is empty when nothing is persisted")
+    @Test
+    public void whenFindAllUsedOnEmptyRepo_SizeReturnedIsZero() {
+        List<User> users = userRepository.findAll().stream().toList();
 
-    @BeforeEach
-    void setUp() {
-        userRepository = new UserRepository();
-        user1 = User.createUser("firstname", "lastname", "test@test.com", "street 88", "5849894");
-        user2 = User.createUser("firstname2", "lastname2", "test2@test.com", "street 99", "111222");
-
-        firstname = "firstname";
-        lastname = "lastname";
-        email = "test@test.com";
-        address = "street 88";
-        phonenumber = "5849894";
-        role = User.Role.REGISTERED;
+        Assertions.assertEquals(0, users.size());
     }
+
 
     @DisplayName("When saving users they are added to the repository ")
     @Test
+    public void whenAddingAMember_repositorySizeIsOne() {
+        userRepository.save(new User());
+
+        List<User> users = userRepository.findAll().stream().toList();
+
+        Assertions.assertEquals(1, users.size());
+    }
+
+    @DisplayName("Repo size is two when two users are added ")
+    @Test
     void whenSavingUsers_thenRepositorySizeIsAccurate() {
-        userRepository.save(user1);
-        userRepository.save(user2);
+        userRepository.save(new User());
+        userRepository.save(new User());
 
         int expected = 2;
-        int result = userRepository.getUsers().size();
+        int result = userRepository.findAll().size();
 
-        assertEquals(expected, result);
+        Assertions.assertEquals(expected, result);
     }
 
     @DisplayName("Saved user details are found via repository")
     @Test
     void whenSavingUser_thenRepositoryContainsThisUser() {
-        userRepository.save(user1);
+        userRepository.save(User.builder().firstName("test").build());
 
-        User result = userRepository.getUsers().get(0);
+        User result = userRepository.findAll().get(0);
 
-        assertEquals(firstname, result.getFirstName());
-        assertEquals(lastname, result.getLastName());
-        assertEquals(email, result.getEmail());
-        assertEquals(address, result.getAddress());
-        assertEquals(phonenumber, result.getPhoneNumber());
-        assertEquals(role, result.getRole());
+        Assertions.assertEquals("test", result.getFirstName());
+
     }
 
     @DisplayName("Get by id returns correct User")
     @Test
     void whenGettingById_thenUserIsReturned() {
-        userRepository.save(user1);
+        userRepository.save(User.builder()
+                .firstName("test")
+                .build());
 
-        User result = userRepository.getUsers().get(0);
-        UUID idOfUser = result.getId();
+        User savedUser = userRepository.findAll().get(0);
+        Long idOfUser = savedUser.getId();
 
-        result = userRepository.getById(idOfUser);
+        User result = userRepository.getById(idOfUser);
 
-        assertEquals(firstname, result.getFirstName());
-        assertEquals(lastname, result.getLastName());
-        assertEquals(email, result.getEmail());
-        assertEquals(address, result.getAddress());
-        assertEquals(phonenumber, result.getPhoneNumber());
-        assertEquals(role, result.getRole());
+        Assertions.assertEquals(idOfUser, result.getId());
+        Assertions.assertEquals("test", result.getFirstName());
+
     }
+
+
 }
-*/
+
