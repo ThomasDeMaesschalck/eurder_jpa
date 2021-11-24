@@ -1,11 +1,14 @@
 package com.switchfully.eurder.api.dto.items;
 
+import lombok.Builder;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 
+@Builder
 public class CreateItemDTO {
     @NotBlank(message = "Name can not be empty")
     @NotNull

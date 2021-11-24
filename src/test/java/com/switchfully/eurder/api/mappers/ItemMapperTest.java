@@ -1,4 +1,3 @@
-/*
 package com.switchfully.eurder.api.mappers;
 
 import com.switchfully.eurder.api.dto.items.CreateItemDTO;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -20,25 +18,25 @@ class ItemMapperTest {
     private CreateItemDTO createItemDTO;
     private UpdateItemDTO updateItemDTO;
     private ItemMapper itemMapper;
-    private UUID randomUUID;
+    private Long id;
 
     @BeforeEach
     void setUp() {
-        item = Item.ItemBuilder.item()
-                .withName("Test Item")
-                .withDescription("Test description")
-                .withPrice(BigDecimal.valueOf(5))
-                .withAmountInStock(5)
-                .buildNewItem();
-
-        createItemDTO = CreateItemDTO.CreateItemDTOBuilder.item()
-                .withName("Test Create Item")
-                .withDescription("Test description")
-                .withPrice(BigDecimal.valueOf(5))
-                .withAmountInStock(5)
+        item = Item.builder()
+                .name("Test Item")
+                .description("Test description")
+                .price(BigDecimal.valueOf(5))
+                .amountInStock(5)
                 .build();
 
-        randomUUID = UUID.randomUUID();
+        createItemDTO = CreateItemDTO.builder()
+                .name("Test Create Item")
+                .description("Test description")
+                .price(BigDecimal.valueOf(5))
+                .amountInStock(5)
+                .build();
+
+        id = 1L;
 
         updateItemDTO = UpdateItemDTO.UpdateItemDTOBuilder.item()
                 .withName("Test Update Item")
@@ -76,14 +74,12 @@ class ItemMapperTest {
     @Test
     @DisplayName("When converting ItemDTO to entity all fields are correct")
     void toEntityForUpdateMethod() {
-        Item result = itemMapper.toEntity(updateItemDTO, randomUUID);
+        Item result = itemMapper.toEntity(updateItemDTO, id);
 
-        assertEquals(randomUUID, result.getId());
+        assertEquals(id, result.getId());
         assertEquals(updateItemDTO.getName(), result.getName());
         assertEquals(updateItemDTO.getDescription(), result.getDescription());
         assertEquals(updateItemDTO.getPrice(), result.getPrice());
         assertEquals(updateItemDTO.getAmountInStock(), result.getAmountInStock());
     }
-
-
-}*/
+}
